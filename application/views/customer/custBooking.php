@@ -11,13 +11,15 @@ $endDate = trim($_POST['endDate']);
 $starttime = trim($_POST['starttime']);
 $endtime = trim($_POST['endtime']);
 $attendee = trim($_POST['attend']);
-$upfront = trim($_POST['upfront']);  
-$rate = 0;
+$upfront = trim($_POST['upfront']);
+$rate = 0; // Initialize rate (this seems to be a placeholder, you might need to set the actual rate value)
+$bookStatus = 0; // Corrected variable name (was missing the $ sign)
+$bookingType = 0; // Initialize booking type (this seems to be a placeholder)
 $selectedFacilities = isset($_POST['facility_id']) ? $_POST['facility_id'] : [];
 $food = $_POST['food'];
-$credit=$upfront;
+$credit = $upfront;
 
-$date=date("y-m-d");
+$date = date("y-m-d");
 // Check if the customer ID is set in the session
 if (!isset($_SESSION['email'])) {
     $result = [
@@ -60,9 +62,7 @@ if (!$checkRecord) {
     ];
     echo json_encode($result);
     exit;
-}
-
-else if (mysqli_num_rows($checkRecord) > 0) {
+} else if (mysqli_num_rows($checkRecord) > 0) {
     $result = [
         'message' => 'Overlapping booking found.',
         'status' => 404
@@ -70,7 +70,6 @@ else if (mysqli_num_rows($checkRecord) > 0) {
     echo json_encode($result);
     exit;
 }
-
 
 // Function to handle facilities checkboxes
 function handleFacilities(&$selectedFacilities) {
@@ -135,7 +134,7 @@ try {
             mysqli_stmt_execute($stmt);
             mysqli_stmt_close($stmt);
         }
-        $booking='CustBooking';
+        $booking = 'CustBooking';
         // Insert into transactions table
         $transactionSql = "INSERT INTO transactions (refID, tranType, custid, credit, transactionDate, debit) 
                            VALUES (?, ?, ?, ?, ?, ?)";
@@ -149,7 +148,8 @@ try {
 
         $result = [
             'message' => 'Booking created successfully.',
-            'status' => 200
+            'status' => 200,
+            'id' => $customerId 
         ];
         echo json_encode($result);
     } else {
@@ -235,6 +235,4 @@ try {
     ];
     echo json_encode($result);
 }
-
-
 ?>
