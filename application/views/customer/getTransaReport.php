@@ -1,50 +1,32 @@
 <?php
 
-//header('Content-Type: application/json');
+session_start(); // Make sure to start the session
 
-
+// Include conn.php here if it's not already included
 include '../../../conn.php';
 
-start_session();
-if (!isset($_SESSION['email'])) {
-    $result = [
-        'message' => 'Email Not Found.',
-        'status' => 404
-    ];
-    echo json_encode($result);
-    exit;
-}
-$email = $_SESSION['email'];
-$CustomerEmailQuery = "SELECT * FROM customers WHERE email='$email'";
-$getCustomer = mysqli_query($conn, $CustomerEmailQuery);
-
-if (!$getCustomer || mysqli_num_rows($getCustomer) === 0) {
-    $result = [
-        'message' => 'Customer ID Not Found.',
-        'status' => 404
-    ];
-    echo json_encode($result);
-    exit;
-}
-
-$data = mysqli_fetch_assoc($getCustomer);
-$customerId = $data['custid'];
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Assuming you have a table named 'employees' in your database
     $startDate = $_POST['startDate'];
     $endDate = $_POST['endDate'];
 
-    // Sanitize the input to prevent SQL injection (assuming 'startDate' and 'endDate' are date values)
+    // Sanitize the input to prevent SQL injection
     $startDate = mysqli_real_escape_string($conn, $startDate);
     $endDate = mysqli_real_escape_string($conn, $endDate);
 
-    // Fetch data from the database based on the date range
+    // Get the user's email from the session
+    $userEmail = $_SESSION['email'];
 
-    $sql = "SELECT * FROM transactions 
-        WHERE custid = '$customerId'
-        AND created_at BETWEEN '$startDate'  AND '$endDate' ";
-   
+    // Fetch data from the database based on the date range and user's email
+    $sql = "SELECT c.custid, c.firstname, r.amount, t.refID, t.tranType, t.credit, t.transactionDate,
+            SUM(r.amount - t.credit) AS Balance
+            FROM transactions t
+            JOIN customers c ON c.custid = t.custid
+            JOIN receipt r ON r.customer = c.custid
+            WHERE t.tranType = 'Receiption' 
+            AND t.transactionDate BETWEEN '$startDate' AND '$endDate'
+            AND c.email = '$userEmail'  -- Add this condition
+            ORDER BY c.custid, t.transactionDate DESC";
+
     $result = mysqli_query($conn, $sql);
 
     $data = array();
@@ -60,7 +42,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Return the data as JSON
     header('Content-Type: application/json');
     echo json_encode($data);
-
 }
 ?>
-
