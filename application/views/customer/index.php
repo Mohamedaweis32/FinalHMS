@@ -295,42 +295,44 @@ if(isset($conn)) $conn->close();
             });
 
             $("#BookingForm").submit(function(e) {
-                e.preventDefault();
-                $.ajax({
-                    url: "custBooking.php",
-                    data: new FormData($(this)[0]),
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    method: 'POST',
-                    type: 'POST',
-                    success: function(resp) {
-                        var res = jQuery.parseJSON(resp);
+                        e.preventDefault();
+                        $.ajax({
+                                url: "custBooking.php",
+                                data: new FormData($(this)[0]),
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                method: 'POST',
+                                type: 'POST',
+                                success: function(resp) {
+                                    var res = jQuery.parseJSON(resp);
+                                    id = res.id
+                                    var url = '../../../invoice.php?id=' + id;
+                                    if (res.status == 200) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Success',
+                                            text: res.message,
+                                        }).then((result) => {
+                                                if (result.isConfirmed) {
 
-                        if (res.status == 200) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success',
-                                text: res.message,
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    window.location.href = '../../../invoice.php';
-                                }
-                            });
-                        } else if (res.status == 404) {
-                            // Use SweetAlert for error message
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: res.message,
-                            });
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error fetching data:', error);
-                    }
-                });
-            });
+                                                    window.location.href = url;
+                                                });
+                                        }
+                                        else if (res.status == 404) {
+                                            // Use SweetAlert for error message
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Error',
+                                                text: res.message,
+                                            });
+                                        }
+                                    },
+                                    error: function(xhr, status, error) {
+                                        console.error('Error fetching data:', error);
+                                    }
+                                });
+                        });
             </script>
 
             <script src="../../../assets/libs/jquery/jquery.min.js"></script>
