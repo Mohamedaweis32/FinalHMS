@@ -77,7 +77,9 @@ session_start();
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img class="rounded-circle header-profile-user"
                                 src="../../../assets/images/users/avatar-1.jpg" alt="Header Avatar">
-                            <?php $email= $_SESSION['email'] ;
+                            <?php 
+                           require_once '../../../conn.php';
+                            $email= $_SESSION['email'] ;
                                 
                                 $sql = "SELECT * FROM customers WHERE email='$email'";
                                 $query = mysqli_query($conn, $sql);
