@@ -296,31 +296,32 @@ if(isset($conn)) $conn->close();
 
             $("#BookingForm").submit(function(e) {
                 e.preventDefault();
+
+                // Create a FormData object from the form
+                var formData = new FormData(this);
+
                 $.ajax({
                     url: "custBooking.php",
-                    data: new FormData($(this)[0]),
+                    data: formData,
                     cache: false,
                     contentType: false,
                     processData: false,
                     method: 'POST',
-                    type: 'POST',
                     success: function(resp) {
-                        var res = jQuery.parseJSON(resp);
+                        var res = JSON.parse(resp);
 
-                        if (res.status == 200) {
+                        if (res.status === 200) {
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success',
                                 text: res.message,
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    id = res.id;
-                                    var url = '../../../invoice.php?id=' + id;
+                                    var url = '../../../invoice.php?id=' + res.id;
                                     window.location.href = url;
                                 }
                             });
-                        } else if (res.status == 404) {
-                            // Use SweetAlert for error message
+                        } else if (res.status === 404) {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',

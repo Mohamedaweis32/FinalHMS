@@ -1,36 +1,3 @@
-<?php 
-    session_start();            
-    include 'conn.php';
-    // Check if the login form is submitted
-    if (isset($_POST['email']) && isset($_POST['password'])) {
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        // Query the database for the user
-        $query = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
-        $result = mysqli_query($conn, $query);
-        if (mysqli_num_rows($result) > 0) {
-            $row = mysqli_fetch_assoc($result);
-            // Set up the session with user information
-            $_SESSION['user_id'] = $row['user_id'];
-            $_SESSION['type'] = $row['type'];
-            $_SESSION['username'] = $row['username'];        
-            print_r($row['email']);
-            $_SESSION['email'] = $row['email'];       
-            // Redirect to the appropriate dashboard
-            if ($_SESSION['type'] === 'admin') {
-                header("Location: application/views/admin/adminDashboard.php");
-                
-            exit();
-            } 
-                header("Location: application/views/customer/dashboard.php");
-           
-            exit();
-        } else {
-            // Handle invalid login credentials
-            $error_message = "Invalid username or password!";
-        }
-    }
-?>
 <!doctype html>
 <html lang="en">
 
@@ -94,6 +61,11 @@
     <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
     <!-- App Css-->
     <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
 </head>
 
 <body>
@@ -174,7 +146,7 @@
                         <p class="error-message"><?php echo $error_message; ?></p>
                         <?php } ?>
 
-                        <form id="signupForm" action="signupHandler.php" style="padding-left:20% ;padding-right:20%;">
+                        <form id="signup" action="signupHandler.php" style="padding-left:20% ;padding-right:20%;">
                             <div>
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Full Name</label>
@@ -261,35 +233,40 @@
 
     <!-- App js -->
     <script src="assets/js/app.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <!-- Include SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </body>
 
 </html>
 <script>
- $('#signupForm').submit(function(e) {
-        e.preventDefault(); // Prevent default form submission behavior
-
-        // Collect form data
-        var formData = $(this).serialize();
-
-        // AJAX request
+$(document).ready(function() {
+    $("#signup").submit(function(e) {
+        e.preventDefault();
         $.ajax({
-            url: 'signupHandler.php',
+            url: "signupHandler.php",
+            data: new FormData($(this)[0]),
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
             type: 'POST',
-            data: formData,
             success: function(resp) {
                 var res = jQuery.parseJSON(resp);
+
                 if (res.status == 200) {
-                    // User created successfully
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
                         text: res.message,
-                    }).then(function() {
-                        window.location.href = "login.php"; // Redirect to success page
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = 'login.php';
+                        }
                     });
-                } else {
-                    // Failed to create user
+                } else if (res.status == 404) {
+                    // Use SweetAlert for error message
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -298,12 +275,7 @@
                 }
             },
             error: function(xhr, status, error) {
-                // Handle error response from the server
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Error: ' + error,
-                });
+                console.error('Error fetching data:', error);
             }
         });
     });
