@@ -60,7 +60,7 @@ $email=$_SESSION['email'];
             include '../../../conn.php';
             // Query to retrieve the data from the database
             $sql = "SELECT custid, 
-            (SELECT SUM(credit-debit) 
+            (SELECT SUM(debit-credit) 
              FROM transactions 
              WHERE custid = c.custid) AS balance
      FROM customers c

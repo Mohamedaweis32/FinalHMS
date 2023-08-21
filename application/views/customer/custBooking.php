@@ -11,9 +11,13 @@ $endDate = trim($_POST['endDate']);
 $starttime = trim($_POST['starttime']);
 $endtime = trim($_POST['endtime']);
 $attendee = trim($_POST['attend']);
+$upfront = trim($_POST['upfront']);  
+$rate = 0;
 $selectedFacilities = isset($_POST['facility_id']) ? $_POST['facility_id'] : [];
 $food = $_POST['food'];
+$credit=$upfront;
 
+$date=date("y-m-d");
 // Check if the customer ID is set in the session
 if (!isset($_SESSION['email'])) {
     $result = [
@@ -131,7 +135,7 @@ try {
             mysqli_stmt_execute($stmt);
             mysqli_stmt_close($stmt);
         }
-        $booking='Booking';
+        $booking='CustBooking';
         // Insert into transactions table
         $transactionSql = "INSERT INTO transactions (refID, tranType, custid, credit, transactionDate, debit) 
                            VALUES (?, ?, ?, ?, ?, ?)";

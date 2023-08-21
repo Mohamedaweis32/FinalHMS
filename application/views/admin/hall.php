@@ -413,11 +413,11 @@ include '../../../conn.php';
                     $('#hcapacity').val(hallData.hcapacity);
 
                     // Display the selected image filename
-                    var filename = hallData.hphoto.split('/').pop();
+                    var filename = "../../" + hallData.hphoto.split('/').pop();
                     $('#hphoto').siblings('.file-label').text(filename);
 
                     // Set the image source
-                    $('#selected-image').attr('src', '../../../images/' + hallData
+                    $('#selected-image').attr('src', '../../' + hallData
                         .hall_photo);
                 },
                 error: function(xhr, status, error) {

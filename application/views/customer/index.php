@@ -70,7 +70,7 @@ $id=$_GET['id'];
                         <div class="card-header bg-gradient bg-primary text-light">
                             <h5 class="card-title">Booking Form</h5>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body ">
 
                             <form id="BookingForm" method="post" action="custBooking.php">
                                 <!-- Hidden inputs for booking and hotel IDs -->
