@@ -174,11 +174,9 @@ $fullname=$record['firstname'];
                                 <div class="col-lg-1 d-none d-lg-block">
                                     <div class="clearfix mt-4 mt-lg-0">
                                         <div class="dropdown float-end">
-                                            <button class="btn btn-sm btn-primary btn-book dropdown-toggle "
-                                                data-bs-target=".orderdetailsModal" data-bs-toggle="modal"
-                                                data-item-id="<?php echo $row['hall_id']; ?>" type="button"
-                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class=""></i>Book Now</button>
+                                            <a href="index.php?id=<?php echo $row['hall_id']; ?>" class="btn btn-sm btn-primary btn-book dropdown-toggle "  type="submit"
+                                            aria-expanded="false">
+                                                <i class=""></i>Book Now</a>
                                             <!-- <div class="dropdown-menu dropdown-menu-end">
                                                     <a class="dropdown-item" href="#">Action</a>
                                                     <a class="dropdown-item" href="#">Manage Halls</a>
@@ -364,66 +362,5 @@ $(".btn-book").click(function() {
 
 
 });
-$("#BookingForm").submit(function(e){   
-            e.preventDefault();
-            $.ajax({
-                url:"custBooking.php",
-                    data: new FormData($(this)[0]),
-                cache: false,
-                contentType: false,
-                processData: false,
-                    method: 'POST',
-                type: 'POST',
-                success: function(resp) {
-                    var res = jQuery.parseJSON(resp);
-                    
-                    if (res.status == 200) {
-                        Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: res.message,
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                //window.location.href = 'dashboard.php';
-                            }
-                        });
-                    } else if (res.status == 404) {
-                        // Use SweetAlert for error message
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: res.message,
-                        });
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching data:', error);
-                }
-            });
-        });
-  
-        function showCalendar(hallId) {
-    var modalContent = `
-        <div class="modal fade" id="bookingCalendarModal" tabindex="-1" aria-labelledby="bookingCalendarModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="bookingCalendarModalLabel">Booking Calendar</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Placeholder content -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-
-    document.body.insertAdjacentHTML('beforeend', modalContent);
-
-    $('#bookingCalendarModal').modal('show'); // Show the modal
-}
-
-
 
     </script>

@@ -4,15 +4,16 @@ require_once "conn.php";
 // Check if the request method is POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get form data
-    $fullName = $_POST['name'];
-    $email = $_POST['email'];
-    $address = $_POST['address'];
-    $phone = $_POST['phone'];
-    $password = $_POST['password'];
-    $confirmPassword = $_POST['confirmPassword'];
-    $date = date('Y-m-d'); // Use uppercase Y for full year
-    $status = 0; // Assuming 0 for inactive users
-    $type = "customer";
+      // Get form data
+      $fullName = $_POST['name'];
+      $email = $_POST['email'];
+      $address = $_POST['Address']; // Note the uppercase 'A' in 'Address'
+      $phone = $_POST['Phone']; // Note the uppercase 'P' in 'Phone'
+      $password = $_POST['password'];
+      $confirmPassword = $_POST['confirmPassword'];
+      $date = date('Y-m-d'); // Use uppercase 'Y' for full year
+      $status = 0; // Assuming 0 for inactive users
+      $type = "customer";
 
     // Perform form validation (You can add more validation as needed)
     if (empty($fullName) || empty($email) || empty($address) || empty($phone) || empty($password) || empty($confirmPassword)) {
@@ -42,6 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Hash the password
+    //$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
     // If no validation errors, proceed with user creation
     $sql = "INSERT INTO users (username, password, email, type, status, date) 
             VALUES ('$fullName', '$password', '$email', '$type', '$status', '$date')";
@@ -61,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Failed to create customer
             $response = [
-                'status' => 400,
+                'status' => 404,
                 'message' => 'Failed to create user. Please try again later.'
             ];
             echo json_encode($response);
@@ -69,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         // Failed to create user
         $response = [
-            'status' => 400,
+            'status' => 404,
             'message' => 'Failed to create user. Please try again later.'
         ];
         echo json_encode($response);
