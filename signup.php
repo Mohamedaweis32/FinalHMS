@@ -266,47 +266,46 @@
 
 </html>
 <script>
+ $('#signupForm').submit(function(e) {
+        e.preventDefault(); // Prevent default form submission behavior
 
-$('#signupForm').submit(function(e) {
-    e.preventDefault(); // Prevent default form submission behavior
+        // Collect form data
+        var formData = $(this).serialize();
 
-    // Collect form data
-    var formData = $(this).serialize();
-
-    // AJAX request
-    $.ajax({
-      url: 'signupHandler.php',
-      type: 'POST',
-      data: formData,
-      success: function(resp) {
-        console.log(resp);
-        var res = jQuery.parseJSON(resp);
-        if (res.status == 200) {
-          // User created successfully
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: res.message,
-          }).then(function() {
-            window.location.href = "login.php"; // Redirect to success page
-          });
-        } else {
-          // Failed to create user
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: res.message,
-          });
-        }
-      },
-      error: function(xhr, status, error) {
-        // Handle error response from the server
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Error: ' + error,
+        // AJAX request
+        $.ajax({
+            url: 'signupHandler.php',
+            type: 'POST',
+            data: formData,
+            success: function(resp) {
+                var res = jQuery.parseJSON(resp);
+                if (res.status == 200) {
+                    // User created successfully
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: res.message,
+                    }).then(function() {
+                        window.location.href = "login.php"; // Redirect to success page
+                    });
+                } else {
+                    // Failed to create user
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: res.message,
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                // Handle error response from the server
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error: ' + error,
+                });
+            }
         });
-      }
     });
-  });
+});
 </script>
