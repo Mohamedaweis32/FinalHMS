@@ -176,19 +176,19 @@
 <?php include 'footer.php'; ?>
 
 <style>
-        /* Custom styles for the table */
-        .dataTables_wrapper {
-            padding: 20px;
-        }
+/* Custom styles for the table */
+.dataTables_wrapper {
+    padding: 20px;
+}
 
-        .dataTables_filter {
-            float: right;
-        }
+.dataTables_filter {
+    float: right;
+}
 
-        .dataTables_paginate {
-            float: right;
-        }
-    </style>
+.dataTables_paginate {
+    float: right;
+}
+</style>
 <!-- Include jQuery, Bootstrap, and DataTables -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
@@ -237,7 +237,7 @@ $(document).ready(function() {
     $("#error").css("display", "none");
     $("#success").css("display", "none");
 
-}) 
+})
 
 
 $("#facility").submit(function(e) {
@@ -259,16 +259,10 @@ $("#facility").submit(function(e) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Success',
-                    text: res.message,
-                    onClose: function() {
-                        // Reset the form fields or hide the form
-                        form[0].reset(); // Use this line to reset form fields
-                        // OR
-                        // form.hide(); // Use this line to hide the form
-
-                        // Redirect to 'facility.php'
-                        window.location.href = 'facility.php';
-                    }
+                    text: res.message
+                }).then(function() {
+                    // Redirect to the 'food.php' page after successful submission
+                    window.location.href = 'facility.php';
                 });
             } else if (res.status == 404) {
                 // Use SweetAlert error alert
@@ -296,7 +290,7 @@ $(document).ready(function() {
                 facility_id: fac_id
             },
             success: function(response) {
-                alert(response)
+                // alert(response)
                 var FaciData = JSON.parse(response);
 
 
@@ -355,7 +349,6 @@ function deleteItem(itemId) {
         }
     });
 }
-
 </script>
 
 

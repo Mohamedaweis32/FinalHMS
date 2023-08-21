@@ -184,19 +184,19 @@
 
 <?php include 'footer.php'; ?>
 <style>
-        /* Custom styles for the table */
-        .dataTables_wrapper {
-            padding: 20px;
-        }
+/* Custom styles for the table */
+.dataTables_wrapper {
+    padding: 20px;
+}
 
-        .dataTables_filter {
-            float: right;
-        }
+.dataTables_filter {
+    float: right;
+}
 
-        .dataTables_paginate {
-            float: right;
-        }
-    </style>
+.dataTables_paginate {
+    float: right;
+}
+</style>
 <!-- Include jQuery, Bootstrap, and DataTables -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
@@ -330,21 +330,54 @@ $(document).ready(function() {
 });
 
 
+// function deleteItem(itemId) {
+
+//     $.ajax({
+//         url: '../../../apis/food/delete.php',
+//         method: 'POST',
+//         data: {
+//             itemId: itemId
+//         },
+//         success: function(response) {
+//             window.location.href = 'food.php';
+//             console.log(response);
+//             // Reload the page or update the UI as needed
+//         },
+//         error: function(xhr, status, error) {
+//             // Handle errors
+//             console.error(error);
+//         }
+//     });
+// }
+
 function deleteItem(itemId) {
-    $.ajax({
-        url: '../../../apis/food/delete.php',
-        method: 'POST',
-        data: {
-            itemId: itemId
-        },
-        success: function(response) {
-            window.location.href = 'food.php';
-            console.log(response);
-            // Reload the page or update the UI as needed
-        },
-        error: function(xhr, status, error) {
-            // Handle errors
-            console.error(error);
+    // Show SweetAlert confirmation
+    Swal.fire({
+        title: 'Confirm Deletion',
+        text: 'Are you sure you want to delete this item?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // If confirmed, proceed with deletion
+            $.ajax({
+                url: '../../../apis/food/delete.php',
+                method: 'POST',
+                data: {
+                    itemId: itemId
+                },
+                success: function(response) {
+                    window.location.href = 'food.php';
+                    console.log(response);
+                    // Reload the page or update the UI as needed
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors
+                    console.error(error);
+                }
+            });
         }
     });
 }
