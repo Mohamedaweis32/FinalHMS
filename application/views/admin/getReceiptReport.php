@@ -14,7 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $endDate = mysqli_real_escape_string($conn, $endDate);
 
     // Fetch data from the database based on the date range
-    $sql = "SELECT c.custid, c.firstname AS customer_name, c.phone AS customer_phone, c.address AS customer_address, c.email AS customer_email, t.tranID AS transaction_id, t.tranType AS transaction_type, t.transactionDate AS transaction_date, t.credit, t.debit FROM customers c JOIN transactions t ON c.custid = t.custid WHERE t.transactionDate BETWEEN '$startDate' AND '$endDate' ORDER BY c.custid, t.transactionDate DESC";
+    $sql = "SELECT c.custid,c.firstname,r.amount,t.refID,t.tranType,t.credit,t.transactionDate, sum(r.amount - t.credit) Balance from transactions t
+    join customers c on c.custid = t.custid
+    join receipt r on r.customer = c.custid
+    where t.tranType = 'Receiption' and t.transactionDate BETWEEN '$startDate' AND '$endDate' ORDER BY c.custid, t.transactionDate DESC";
 
     $result = mysqli_query($conn, $sql);
 
@@ -34,4 +37,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 }
 ?>
-
