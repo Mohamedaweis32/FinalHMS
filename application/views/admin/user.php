@@ -206,14 +206,14 @@
                         </div>
 
 
-                        <div class="mb-3">
+                        <!-- <div class="mb-3">
                             <select class="form-control form-control-sm" name="status" id="status">
                                 <option value="">Choose User Status</option>
                                 <option value="1">Active</option>
                                 <option value="0">Inactive</option>
 
                             </select>
-                        </div>
+                        </div> -->
 
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary" id="btnCustomer">Save Changes</button>
@@ -233,15 +233,10 @@
 <?php include 'footer.php'; ?>
 
 
-<!-- Include jQuery, Bootstrap, and DataTables -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap4.min.js"></script>
-<!-- Add this to your HTML file -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
-<!-- Include SweetAlert2 CSS and JS files -->
-<link rel="stylesheet" href="path/to/sweetalert2.min.css">
-<script src="path/to/sweetalert2.all.min.js"></script>
 
 <!-- Your HTML and form code here -->
 
@@ -249,15 +244,26 @@
 
 <script>
 $(document).ready(function() {
+    $('#tblCustomer').DataTable();
+    $('.dataTables_length').addClass('bs-select');
+
     $('.delete-btn').click(function(e) {
         e.preventDefault();
         var itemId = $(this).data('item-id');
         deleteItem(itemId);
     });
 
-    $('#tblCustomer').DataTable();
-    $('.dataTables_length').addClass('bs-select');
+    $(document).ready(function() {
+        $('.delete-btn').click(function(e) {
+            e.preventDefault();
+            var itemId = $(this).data('item-id');
+            deleteItem(itemId);
+        });
 
+        $("#error").css("display", "none");
+        $("#success").css("display", "none");
+
+    })
     $('.edit-btn').click(function() {
         var user_id = parseInt($(this).data('id'), 10);
         $.ajax({
@@ -280,43 +286,47 @@ $(document).ready(function() {
     });
 
     $("#users").submit(function(e) {
-        e.preventDefault();
-
+        e.preventDefault(); // Prevent the form from submitting
+        var formData = new FormData($(this)[0]);
+        console.log(formData)
         // Show the loader
         $("#loader").show();
 
         $.ajax({
             url: '../../../apis/users/users.php',
-            data: new FormData($(this)[0]),
+            data: formData,
             cache: false,
             contentType: false,
             processData: false,
             method: 'POST',
             type: 'POST',
+            dataType: 'json', // Specify that the response is JSON
             success: function(resp) {
-                var res = jQuery.parseJSON(resp);
-                if (res.status == 200) {
-                    // Hide the loader before redirecting
-                    $("#loader").hide();
+                console.log(resp); // Corrected typo
 
+                if (resp.status == 200) {
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
-                        text: res.message,
-                        onClose: () => {
-                            window.location.href = 'user.php';
-                        }
+                        text: resp.message,
+                        onClose: () => window.location
+                            .reload() // Reload the page after the timer expires
                     });
-                } else if (res.status == 404) {
-                    // Hide the loader before showing the error
-                    $("#loader").hide();
 
+                } else if (resp.status == 404) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: res.message
+                        text: resp.message
                     });
                 }
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while processing the request.'
+                });
             },
             complete: function() {
                 // Always hide the loader when the AJAX request is complete
@@ -324,6 +334,7 @@ $(document).ready(function() {
             }
         });
     });
+
 });
 
 function deleteItem(itemId) {
@@ -346,7 +357,6 @@ function deleteItem(itemId) {
                     itemId: itemId
                 },
                 success: function(response) {
-
                     if (response.status == 200) {
                         Swal.fire({
                             icon: 'success',
@@ -356,13 +366,12 @@ function deleteItem(itemId) {
                             // After showing the success alert, redirect to 'user.php'
                             window.location.href = 'user.php';
                         });
-                    },
-                }
-                elseif(response.status == 404) {
-
-                }
-                // Use SweetAlert success alert
-
+                    } else if (response.status == 404) { // Change "elseif" to "else if"
+                        // Handle the case when status is 404
+                    } else {
+                        // Handle other cases or errors
+                    }
+                },
                 error: function(xhr, status, error) {
                     // Use SweetAlert error alert
                     Swal.fire({
@@ -373,6 +382,7 @@ function deleteItem(itemId) {
                     console.error(error);
                 }
             });
+
         }
     });
 }

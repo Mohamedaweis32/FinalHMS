@@ -84,12 +84,12 @@ include '../../../conn.php';
                                                 <tr>
                                                     <th scope="col">#</th>
                                                     <th scope="col">Hall Name</th>
-                                                    <th scope="col">Location</th>
                                                     <th scope="col">Price</th>
+                                                    <th scope="col">Location</th>
                                                     <th scope="col">Caapcity</th>
                                                     <th scope="col">Description</th>
-                                                    <th scope="col">Photo</th>
                                                     <th scope="col">Date</th>
+                                                    <th scope="col">Photo</th>
                                                     <th scope="col">Action</th>
                                                 </tr>
                                             </thead>
@@ -158,12 +158,13 @@ include '../../../conn.php';
             <!-- end row -->
             <!-- Modal -->
             <div class="modal fade hallModal" id="hallModal" tabindex="-1" role="dialog"
-                aria-labelledby="hallModalLabel" aria-fffden="true">
+                aria-labelledby="hallModalLabel" aria-fffden="true" data-bs-backdrop="static" data-bs-keyboard="false">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="hallModalarielabel">Halls</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                onclick="closeModal();"></button>
                         </div>
                         <div class="modal-body">
 
@@ -175,7 +176,8 @@ include '../../../conn.php';
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="formrow-address-input" class="form-label">hall Type</label>
+                                            <label for="htype" class="form-label ">hall
+                                                Type <span class='text-danger'>*</span></label>
                                             <input type="text" class="form-control" id="htype" name="htype"
                                                 placeholder="Enter Hall address">
                                         </div>
@@ -224,16 +226,16 @@ include '../../../conn.php';
                                 </div>
                                 <div class="row">
                                     <div class="modal-body">
-                                        <div class="selected-image-container">
-                                            <img id="selected-image" src="" alt="Perview Hall Photo">
+                                        <div class="selected-image-container" id="img-selected">
+                                            <img id=" selected-image" src="" alt="Perview Hall Photo">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" id="btnSubmit" class="btn btn-primary"
                                         data-bs-dismiss="modal">Save Changes</button>
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                        onclick="closeModal();">Close</button>
                                 </div>
                             </form>
                         </div>
@@ -329,54 +331,79 @@ include '../../../conn.php';
 
     $("#hall_form").submit(function(e) {
         e.preventDefault();
-        $.ajax({
-            url: "../../../apis/halls.php",
-            data: new FormData($(this)[0]),
-            cache: false,
-            contentType: false,
-            processData: false,
-            method: 'POST',
-            type: 'POST',
-            success: function(resp) {
-                var res = jQuery.parseJSON(resp);
-                if (res.status == 200) {
-                    // Show success alert
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: res.message,
-                        timer: 2000, // Show success message for 2 seconds
-                        timerProgressBar: true,
-                        showConfirmButton: false
-                    });
-                    // Redirect after success
-                    setTimeout(function() {
-                        window.location.href = 'hall.php';
-                    }, 2000);
-                } else if (res.status == 404) {
-                    // Show error alert
+        if (!validateForm()) {
+            showValidationErrorAlert();
+
+        } else {
+            $.ajax({
+                url: "../../../apis/halls.php",
+                data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                success: function(resp) {
+                    var res = jQuery.parseJSON(resp);
+                    if (res.status == 200) {
+                        // Show success alert
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: res.message,
+                            timer: 2000, // Show success message for 2 seconds
+                            timerProgressBar: true,
+                            showConfirmButton: false
+                        });
+                        // Redirect after success
+                        setTimeout(function() {
+                            window.location.href = 'hall.php';
+                        }, 2000);
+                    } else if (res.status == 404) {
+                        // Show error alert
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: res.message,
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors
+                    console.error(error);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        text: res.message,
+                        text: 'An error occurred during submission.',
                         confirmButtonText: 'OK'
                     });
                 }
-            },
-            error: function(xhr, status, error) {
-                // Handle errors
-                console.error(error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'An error occurred during submission.',
-                    confirmButtonText: 'OK'
-                });
-            }
-        });
+            });
+        }
     });
 
+    function validateForm() {
+        const htype = $("#htype").val();
+        const hlocation = $("#hlocation").val();
+        const hcapacity = $("#hcapacity").val();
+        const hprice = $("#hprice").val();
+        const hdesc = $("#hdesc").val();
+        const image = $("#hphoto").val();
 
+        return htype && hlocation && hcapacity && hprice && hdesc && image;
+    }
+
+    function showValidationErrorAlert() {
+        Swal.fire({
+            icon: 'error',
+            title: 'Validation Error',
+            text: 'All fields are required. Please fill out all the required fields.',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK'
+        });
+        // return;
+    }
 
     $(document).ready(function() {
         // When a file is selected, display the image
@@ -386,11 +413,28 @@ include '../../../conn.php';
 
             reader.onload = function(e) {
                 $('#selected-image').attr('src', e.target.result);
+                $("#img-selected").html(`
+                        <img id=" selected-image" class="rounded-lg" src="${e.target.result}" alt="Perview Hall Photo" width="400" height="200">
+                    `)
             }
 
             reader.readAsDataURL(file);
         });
     });
+
+    function closeModal() {
+        $("#img-selected").html(`
+            <img id=" selected-image" class="rounded-lg" src="" alt="Perview Hall Photo" width="400" height="200">
+        `)
+        $("#hallModal").modal("show")
+
+        $("#htype").val('')
+        $("#hlocation").val('')
+        $("#hcapacity").val('')
+        $("#hprice").val('')
+        $("#hdesc").val('')
+
+    }
 
     $(document).ready(function() {
         $('.edit-btn').click(function() {
@@ -417,8 +461,11 @@ include '../../../conn.php';
                     $('#hphoto').siblings('.file-label').text(filename);
 
                     // Set the image source
-                    $('#selected-image').attr('src', '../../' + hallData
-                        .hall_photo);
+                    console.log(hallData)
+                    $("#img-selected").html(`
+                        <img id=" selected-image" class="rounded-lg" src="../../${hallData.hphoto}" alt="Perview Hall Photo" width="400" height="200">
+                    `)
+                    // $('#selected-image').attr('src', `../../${hallData.hphoto}`);
                 },
                 error: function(xhr, status, error) {
                     // Handle errors

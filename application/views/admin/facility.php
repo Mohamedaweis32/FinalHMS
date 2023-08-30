@@ -142,7 +142,7 @@
                     <form id="facility" action="../../../apis/Facility/facilities.php" method="post">
                         <input type="hidden" class="form-control" id="fac_id" name="fac_id">
                         <div class="mb-3">
-                            <label for="formrow-firstname-input" class="form-label">Facility Name</label>
+                            <label for="fname" class="form-label">Facility Name</label>
                             <input type="text" class="form-control" id="fname" name="fname"
                                 placeholder="Enter Facility Name">
                         </div>
@@ -243,39 +243,64 @@ $(document).ready(function() {
 $("#facility").submit(function(e) {
     e.preventDefault();
     var form = $(this); // Store the form element in a variable
+    if (!validateForm()) {
+        showValidationErrorAlert();
 
-    $.ajax({
-        url: "../../../apis/Facility/facilities.php",
-        data: new FormData(form[0]),
-        cache: false,
-        contentType: false,
-        processData: false,
-        method: 'POST',
-        type: 'POST',
-        success: function(resp) {
-            var res = jQuery.parseJSON(resp);
-            if (res.status == 200) {
-                // Use SweetAlert success alert
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: res.message
-                }).then(function() {
-                    // Redirect to the 'food.php' page after successful submission
-                    window.location.href = 'facility.php';
-                });
-            } else if (res.status == 404) {
-                // Use SweetAlert error alert
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: res.message
-                });
+    } else {
+        $.ajax({
+            url: "../../../apis/Facility/facilities.php",
+            data: new FormData(form[0]),
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
+            type: 'POST',
+            success: function(resp) {
+                var res = jQuery.parseJSON(resp);
+                if (res.status == 200) {
+                    // Use SweetAlert success alert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: res.message
+                    }).then(function() {
+                        // Redirect to the 'food.php' page after successful submission
+                        window.location.href = 'facility.php';
+                    });
+                } else if (res.status == 404) {
+                    // Use SweetAlert error alert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: res.message
+                    });
+                }
             }
-        }
-    });
+        });
+    }
 });
 
+
+function validateForm() {
+    const fname = $("#fname").val();
+    const price = $("#price").val();
+    // const hcapacity = $("#hcapacity").val();
+    // const hprice = $("#hprice").val();
+    // const hdesc = $("#hdesc").val();
+    // const image = $("#hphoto").val();
+
+    return fname && price;
+}
+
+function showValidationErrorAlert() {
+    Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'All fields are required. Please fill out all the required fields.',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK'
+    });
+}
 
 
 
