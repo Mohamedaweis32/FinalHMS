@@ -175,11 +175,11 @@ include '../../../conn.php'; ?>
                            else {
                             echo "<td style='color: Red; font-weight: bold; font-style: italic;'>Cancelled</td>";
                            }
-                           if($btype==0){
+                           if($btype==1){
                             echo "<td>onlyHall</td>";
                            }
                            else{
-                            echo "<td>withFood</td>";
+                            echo "<td>FoodIncluded</td>";
                            }
                    
                             echo "<td>$attend</td>";
@@ -686,7 +686,21 @@ include '../../../conn.php'; ?>
 </div>
 
 <?php include 'footer.php'; ?>
+<!-- Include jQuery, Bootstrap, and DataTables -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap4.min.js"></script>
 
+<!-- Add this to your HTML file -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+<!-- SweetAlert CSS -->
+<link rel="stylesheet" href="path/to/sweetalert2.min.css">
+
+<!-- Your other HTML code -->
+
+<!-- SweetAlert JS -->
+<script src="path/to/sweetalert2.min.js"></script>
 <script>
 $(document).ready(function() {
 
@@ -841,20 +855,26 @@ $("#Book").submit(function(e) {
         method: 'POST',
         type: 'POST',
         success: function(resp) {
-           
-            var res = jQuery.parseJSON(resp);
-            if (res.status == 200) {
-
-                $("#success").css("display", "block");
-                $("#success").text(res.message);
-                window.location.href = 'Booking.php';
-            } else if (res.status == 404) {
-                //   $("#success").css("display", "none");
-                //    $("#error").css("display", "block");
-                //    $("#error").text(res.message);
+                var res = jQuery.parseJSON(resp);
+                if (res.status == 200) {
+                    // Use SweetAlert success alert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: res.message
+                    }).then(function() {
+                        // Redirect to the 'food.php' page after successful submission
+                        window.location.href = 'booking.php';
+                    });
+                } else if (res.status == 404) {
+                    // Use SweetAlert error alert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: res.message
+                    });
+                }
             }
-
-        }
     });
 
 
@@ -902,20 +922,26 @@ $("#Discount").submit(function(e) {
         method: 'POST',
         type: 'POST',
         success: function(resp) {
- 
-            var res = jQuery.parseJSON(resp);
-            if (res.status == 200) {
-
-                $("#success").css("display", "block");
-                $("#success").text(res.message);
-                window.location.href = 'Booking.php';
-            } else if (res.status == 404) {
-                //   $("#success").css("display", "none");
-                //    $("#error").css("display", "block");
-                //    $("#error").text(res.message);
+                var res = jQuery.parseJSON(resp);
+                if (res.status == 200) {
+                    // Use SweetAlert success alert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: res.message
+                    }).then(function() {
+                        // Redirect to the 'food.php' page after successful submission
+                        window.location.href = 'booking.php';
+                    });
+                } else if (res.status == 404) {
+                    // Use SweetAlert error alert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: res.message
+                    });
+                }
             }
-
-        }
     });
 
 
