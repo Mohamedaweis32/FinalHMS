@@ -959,20 +959,26 @@ $("#Refund").submit(function(e) {
         method: 'POST',
         type: 'POST',
         success: function(resp) {
-            alert(resp)
-            var res = jQuery.parseJSON(resp);
-            if (res.status == 200) {
-
-                $("#success").css("display", "block");
-                $("#success").text(res.message);
-                window.location.href = 'Booking.php';
-            } else if (res.status == 404) {
-                //   $("#success").css("display", "none");
-                //    $("#error").css("display", "block");
-                //    $("#error").text(res.message);
+                var res = jQuery.parseJSON(resp);
+                if (res.status == 200) {
+                    // Use SweetAlert success alert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: res.message
+                    }).then(function() {
+                        // Redirect to the 'food.php' page after successful submission
+                        window.location.href = 'booking.php';
+                    });
+                } else if (res.status == 404) {
+                    // Use SweetAlert error alert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: res.message
+                    });
+                }
             }
-
-        }
     });
 
 
@@ -1010,20 +1016,27 @@ function cancel(itemId) {
         data: {
             itemId: itemId
         },
-        success: function(response) {
-       
-            var res = jQuery.parseJSON(resp);
-            if (res.status == 200) {
-
-                $("#success").css("display", "block");
-                $("#success").text(res.message);
-                window.location.href = 'Booking.php';
-            } else if (res.status == 404) {
-                //   $("#success").css("display", "none");
-                //    $("#error").css("display", "block");
-                //    $("#error").text(res.message);
-            }
-        },
+        success: function(resp) {
+                var res = jQuery.parseJSON(resp);
+                if (res.status == 200) {
+                    // Use SweetAlert success alert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: res.message
+                    }).then(function() {
+                        // Redirect to the 'food.php' page after successful submission
+                        window.location.href = 'booking.php';
+                    });
+                } else if (res.status == 404) {
+                    // Use SweetAlert error alert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: res.message
+                    });
+                }
+            },
         error: function(xhr, status, error) {
             // Handle errors
             console.error(error);
