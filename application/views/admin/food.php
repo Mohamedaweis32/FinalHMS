@@ -184,19 +184,19 @@
 
 <?php include 'footer.php'; ?>
 <style>
-        /* Custom styles for the table */
-        .dataTables_wrapper {
-            padding: 20px;
-        }
+/* Custom styles for the table */
+.dataTables_wrapper {
+    padding: 20px;
+}
 
-        .dataTables_filter {
-            float: right;
-        }
+.dataTables_filter {
+    float: right;
+}
 
-        .dataTables_paginate {
-            float: right;
-        }
-    </style>
+.dataTables_paginate {
+    float: right;
+}
+</style>
 <!-- Include jQuery, Bootstrap, and DataTables -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
@@ -266,28 +266,31 @@ $(document).ready(function() {
 //      });
 $("#foods").submit(function(e) {
     e.preventDefault();
+
+    var formData = new FormData($(this)[0]);
+    console.log(formData)
     $.ajax({
         url: "../../../apis/food/foods.php",
-        data: new FormData($(this)[0]),
+        data: formData,
         cache: false,
         contentType: false,
         processData: false,
         method: 'POST',
         type: 'POST',
+        dataType: 'json',
         success: function(resp) {
-            var res = jQuery.parseJSON(resp);
-            if (res.status == 200) {
+            var res = JSON.parse(resp);
+            if (res.status === 200) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',
                     text: res.message,
-                    timer: 2000, // The notification will automatically close after 2 seconds
+                    timer: 2000,
                     showConfirmButton: false,
                 }).then(function() {
-                    // Redirect to the 'food.php' page after successful submission
                     window.location.href = 'food.php';
                 });
-            } else if (res.status == 404) {
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -296,7 +299,6 @@ $("#foods").submit(function(e) {
             }
         },
         error: function(xhr, status, error) {
-            // Handle errors
             console.error(error);
         }
     });
@@ -306,6 +308,7 @@ $("#foods").submit(function(e) {
 
 $(document).ready(function() {
     $('.edit-btn').click(function() {
+
         var foodid = parseInt($(this).data('id'), 10);
         $.ajax({
             url: '../../../apis/food/getFood.php',
@@ -314,11 +317,9 @@ $(document).ready(function() {
                 foodid: foodid
             },
             success: function(response) {
-                alert(response)
+                //  alert(response)
                 var foodata = JSON.parse(response);
-
-                console.log(foodata.cname);
-                $('#fid').val(1);
+                $('#fid').val(foodata.fid);
                 $('#fprice').val(foodata.price);
                 $('#ftype').val(foodata.type);
 
@@ -330,21 +331,54 @@ $(document).ready(function() {
 });
 
 
+// function deleteItem(itemId) {
+
+//     $.ajax({
+//         url: '../../../apis/food/delete.php',
+//         method: 'POST',
+//         data: {
+//             itemId: itemId
+//         },
+//         success: function(response) {
+//             window.location.href = 'food.php';
+//             console.log(response);
+//             // Reload the page or update the UI as needed
+//         },
+//         error: function(xhr, status, error) {
+//             // Handle errors
+//             console.error(error);
+//         }
+//     });
+// }
+
 function deleteItem(itemId) {
-    $.ajax({
-        url: '../../../apis/food/delete.php',
-        method: 'POST',
-        data: {
-            itemId: itemId
-        },
-        success: function(response) {
-            window.location.href = 'food.php';
-            console.log(response);
-            // Reload the page or update the UI as needed
-        },
-        error: function(xhr, status, error) {
-            // Handle errors
-            console.error(error);
+    // Show SweetAlert confirmation
+    Swal.fire({
+        title: 'Confirm Deletion',
+        text: 'Are you sure you want to delete this item?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // If confirmed, proceed with deletion
+            $.ajax({
+                url: '../../../apis/food/delete.php',
+                method: 'POST',
+                data: {
+                    itemId: itemId
+                },
+                success: function(response) {
+                    window.location.href = 'food.php';
+                    console.log(response);
+                    // Reload the page or update the UI as needed
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors
+                    console.error(error);
+                }
+            });
         }
     });
 }

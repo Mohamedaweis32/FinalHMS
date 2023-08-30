@@ -142,7 +142,7 @@
                     <form id="facility" action="../../../apis/Facility/facilities.php" method="post">
                         <input type="hidden" class="form-control" id="fac_id" name="fac_id">
                         <div class="mb-3">
-                            <label for="formrow-firstname-input" class="form-label">Facility Name</label>
+                            <label for="fname" class="form-label">Facility Name</label>
                             <input type="text" class="form-control" id="fname" name="fname"
                                 placeholder="Enter Facility Name">
                         </div>
@@ -176,19 +176,19 @@
 <?php include 'footer.php'; ?>
 
 <style>
-        /* Custom styles for the table */
-        .dataTables_wrapper {
-            padding: 20px;
-        }
+/* Custom styles for the table */
+.dataTables_wrapper {
+    padding: 20px;
+}
 
-        .dataTables_filter {
-            float: right;
-        }
+.dataTables_filter {
+    float: right;
+}
 
-        .dataTables_paginate {
-            float: right;
-        }
-    </style>
+.dataTables_paginate {
+    float: right;
+}
+</style>
 <!-- Include jQuery, Bootstrap, and DataTables -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
@@ -237,51 +237,70 @@ $(document).ready(function() {
     $("#error").css("display", "none");
     $("#success").css("display", "none");
 
-}) 
+})
 
 
 $("#facility").submit(function(e) {
     e.preventDefault();
     var form = $(this); // Store the form element in a variable
+    if (!validateForm()) {
+        showValidationErrorAlert();
 
-    $.ajax({
-        url: "../../../apis/Facility/facilities.php",
-        data: new FormData(form[0]),
-        cache: false,
-        contentType: false,
-        processData: false,
-        method: 'POST',
-        type: 'POST',
-        success: function(resp) {
-            var res = jQuery.parseJSON(resp);
-            if (res.status == 200) {
-                // Use SweetAlert success alert
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: res.message,
-                    onClose: function() {
-                        // Reset the form fields or hide the form
-                        form[0].reset(); // Use this line to reset form fields
-                        // OR
-                        // form.hide(); // Use this line to hide the form
-
-                        // Redirect to 'facility.php'
+    } else {
+        $.ajax({
+            url: "../../../apis/Facility/facilities.php",
+            data: new FormData(form[0]),
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
+            type: 'POST',
+            success: function(resp) {
+                var res = jQuery.parseJSON(resp);
+                if (res.status == 200) {
+                    // Use SweetAlert success alert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: res.message
+                    }).then(function() {
+                        // Redirect to the 'food.php' page after successful submission
                         window.location.href = 'facility.php';
-                    }
-                });
-            } else if (res.status == 404) {
-                // Use SweetAlert error alert
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: res.message
-                });
+                    });
+                } else if (res.status == 404) {
+                    // Use SweetAlert error alert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: res.message
+                    });
+                }
             }
-        }
-    });
+        });
+    }
 });
 
+
+function validateForm() {
+    const fname = $("#fname").val();
+    const price = $("#price").val();
+    // const hcapacity = $("#hcapacity").val();
+    // const hprice = $("#hprice").val();
+    // const hdesc = $("#hdesc").val();
+    // const image = $("#hphoto").val();
+
+    return fname && price;
+}
+
+function showValidationErrorAlert() {
+    Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'All fields are required. Please fill out all the required fields.',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK'
+    });
+}
 
 
 
@@ -296,7 +315,7 @@ $(document).ready(function() {
                 facility_id: fac_id
             },
             success: function(response) {
-                alert(response)
+                // alert(response)
                 var FaciData = JSON.parse(response);
 
 
@@ -355,7 +374,6 @@ function deleteItem(itemId) {
         }
     });
 }
-
 </script>
 
 

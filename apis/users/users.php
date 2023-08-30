@@ -8,32 +8,34 @@ require '../functions.php';
     $upass = $_POST['upass'];
     $email = $_POST['email'];
     $type = $_POST['type'];
-    $status =$_POST['status'];
     $date = date('y-m-d');
-
     if (empty($userid)){
-
+        
         $sql="select * from users where email='$email'";
         $query=mysqli_query($conn,$sql);
         if($query && mysqli_num_rows($query)>0){
             $result = [
-            'message' => 'User Already exists.',
-            'status' => 404
+                'message' => 'User Already exists.',
+                'status' => 404
             ];
         }
-
+        
         else{
-    $sql = "INSERT INTO users VALUES (null,'$uname', '$upass', '$email', '$type', '$status','$date')";
-    $query = mysqli_query($conn, $sql);
+            $sql = "INSERT INTO `users`(`user_id`, `username`, `password`, `email`, `type`,  `date`) VALUES(null,'$uname', '$upass', '$email', '$type', '$date')";
+            $query = mysqli_query($conn, $sql);
+            
+            // Check if the insert was successful
+            if ($query) {
+                // Insert successful
+                $result = [
+                    'message' => 'User created successfully.',
+                    'status' => 200
+                ];
+                echo json_encode($result);
+                return;
+        // Redirect to a different PHP page
+        // header("Location: ../../application/views/admin/user.php");
 
-    // Check if the insert was successful
-    if ($query) {
-        // Insert successful
-        $result = [
-            'message' => 'User created successfully.',
-            'status' => 200
-        ];
-        echo json_encode($result);
     } else {
         // Insert failed
         $result = [
