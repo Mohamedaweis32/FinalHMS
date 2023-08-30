@@ -712,7 +712,7 @@ $(document).ready(function() {
                 bid: bid
             },
             success: function(response) {
-                alert(response)
+                
                 var bdata = JSON.parse(response);
 
                 $('.facility-checkbox').prop('checked',
@@ -768,7 +768,7 @@ $(document).ready(function() {
 
                 var bdata = JSON.parse(response);
 
-                alert(bdata.bid);
+              
                 $('#rcname').val(bdata.cname);
                 $('#rdue').val(bdata.balance);
                 $('#rbid').val(bdata.bid);
@@ -805,7 +805,7 @@ $(document).ready(function() {
     $('.discount-btn').click(function() {
 
         var rid = parseInt($(this).data('item-id'), 10);
-        alert(rid)
+ 
         $.ajax({
             url: "../../../apis/booking/getReceiption.php",
             type: 'POST',
@@ -813,7 +813,7 @@ $(document).ready(function() {
                 rid: rid
             },
             success: function(response) {
-                alert(response)
+         
                 var bdata = JSON.parse(response);
 
                 console.log(bdata.id);
@@ -841,7 +841,7 @@ $("#Book").submit(function(e) {
         method: 'POST',
         type: 'POST',
         success: function(resp) {
-            alert(resp)
+           
             var res = jQuery.parseJSON(resp);
             if (res.status == 200) {
 
@@ -902,7 +902,7 @@ $("#Discount").submit(function(e) {
         method: 'POST',
         type: 'POST',
         success: function(resp) {
-            alert(resp)
+ 
             var res = jQuery.parseJSON(resp);
             if (res.status == 200) {
 
@@ -985,7 +985,7 @@ function cancel(itemId) {
             itemId: itemId
         },
         success: function(response) {
-            alert(resp)
+       
             var res = jQuery.parseJSON(resp);
             if (res.status == 200) {
 
