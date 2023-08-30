@@ -719,7 +719,7 @@ $(document).ready(function() {
                 false); // Uncheck all checkboxes initially
 
                 $('#bookid').val(bdata.id);
-                $('#bstatus').val(bdata.STATUS);
+                $('#bstatus').val(bdata.status);
                 $('#rate').val(bdata.rate);
                 $('#startDate').val(bdata.sdate);
                 $('#hallId').val(bdata.hall_id);
