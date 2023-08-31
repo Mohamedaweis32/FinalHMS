@@ -7,23 +7,22 @@
 
 
 <?php
-include_once 'header.php'; 
-include_once 'nav.php'; 
-include_once 'footer.php'; 
+include_once 'header.php';
+include_once 'nav.php';
+include_once 'footer.php';
 
 include_once "../../../conn.php";
 
- $email= $_SESSION['email'];
+$email = $_SESSION['email'];
 
- $sql="select c.firstname as name from bookings b
+$sql = "select c.firstname as name from bookings b
   left join customers c on b.customer_id =c.custid where c.email='$email'";
- $query=mysqli_query($conn,$sql);
- if (mysqli_num_rows($query) > 0){
-    $row=mysqli_fetch_array($query);
-    $firstname=$row['name'];
- }
-else{
-    $firstname='username not found';
+$query = mysqli_query($conn, $sql);
+if (mysqli_num_rows($query) > 0) {
+    $row = mysqli_fetch_array($query);
+    $firstname = $row['name'];
+} else {
+    $firstname = 'username not found';
 }
 
 
@@ -116,10 +115,10 @@ else{
                                                     </thead>
 
                                                     <?php
-                                                        $email=$_SESSION['email'];
-                                                        
-                // Select query
-                $sql = "SELECT
+                                                    $email = $_SESSION['email'];
+
+                                                    // Select query
+                                                    $sql = "SELECT
                 b.bookingType AS btype,
                 b.booking_id AS id,
                 DATE(b.created_at) AS bdate,
@@ -145,59 +144,56 @@ else{
             GROUP BY
                 b.booking_id;
             ";
-                $result = mysqli_query($conn, $sql);
-                $n=1;
-                // Check if the query was successful
-                if ($result) {
-                    //Check if there are any rows returned
-                    if (mysqli_num_rows($result) > 0) {
-                        while ($row = mysqli_fetch_assoc($result)) {
-                            $cname  = $row['cname'];
-                            $id  = $row['id'];
-                            $status = $row['STATUS'];
-                            $rate = $row['rate'];
-                            $htype  = $row['htype'];
-                            $sdate = $row['sdate'];
-                            $edate = $row['edate'];
-                            $attend = $row['attend'];
-                            $balance = $row['balance'];
-                            $btype=$row['btype'];
-                            $date = $row['bdate'];
-                            // $date = $row['bdate'];
-                            
-                            // Display the data
-                        
-                            echo "<tr>";
-                            echo "<td>$n</td>";   
-                            echo "<td>$htype</td>";                      
-                            echo "<td>$cname</td>";                         
-                            echo "<td>$sdate</td>";                         
-                            echo "<td>$edate</td>";     
-                                          
-                          
-                           if($status==0){
-                            echo "<td style='color: green;font-weight: bold; font-style: normal;'>Pending</td>";
-                           }
-                           else if($status==1){
-                           echo "<td style='color: blue; font-weight: bold; font-style: italic;'>Approved</td>";
-                           }
-                           else {
-                            echo "<td style='color: Red; font-weight: bold; font-style: italic;'>Cancelled</td>";
-                           }
-                           if($btype==0){
-                            echo "<td>onlyHall</td>";
-                           }
-                           else{
-                            echo "<td>withFood</td>";
-                           }
-                   
-                            echo "<td>$attend</td>";
-                            echo "<td>$rate</td>";
-                            
-                          
-                            echo "<td>$balance</td>";
-                            echo "<td>$date</td>";
-//                             echo "<td>
+                                                    $result = mysqli_query($conn, $sql);
+                                                    $n = 1;
+                                                    // Check if the query was successful
+                                                    if ($result) {
+                                                        //Check if there are any rows returned
+                                                        if (mysqli_num_rows($result) > 0) {
+                                                            while ($row = mysqli_fetch_assoc($result)) {
+                                                                $cname = $row['cname'];
+                                                                $id = $row['id'];
+                                                                $status = $row['STATUS'];
+                                                                $rate = $row['rate'];
+                                                                $htype = $row['htype'];
+                                                                $sdate = $row['sdate'];
+                                                                $edate = $row['edate'];
+                                                                $attend = $row['attend'];
+                                                                $balance = $row['balance'];
+                                                                $btype = $row['btype'];
+                                                                $date = $row['bdate'];
+                                                                // $date = $row['bdate'];
+                                                    
+                                                                // Display the data
+                                                    
+                                                                echo "<tr>";
+                                                                echo "<td>$n</td>";
+                                                                echo "<td>$htype</td>";
+                                                                echo "<td>$cname</td>";
+                                                                echo "<td>$sdate</td>";
+                                                                echo "<td>$edate</td>";
+
+
+                                                                if ($status == 0) {
+                                                                    echo "<td style='color: green;font-weight: bold; font-style: normal;'>Pending</td>";
+                                                                } else if ($status == 1) {
+                                                                    echo "<td style='color: blue; font-weight: bold; font-style: italic;'>Approved</td>";
+                                                                } else {
+                                                                    echo "<td style='color: Red; font-weight: bold; font-style: italic;'>Cancelled</td>";
+                                                                }
+                                                                if ($btype == 0) {
+                                                                    echo "<td>onlyHall</td>";
+                                                                } else {
+                                                                    echo "<td>withFood</td>";
+                                                                }
+
+                                                                echo "<td>$attend</td>";
+                                                                echo "<td>$rate</td>";
+
+
+                                                                echo "<td>$balance</td>";
+                                                                echo "<td>$date</td>";
+                                                                //                             echo "<td>
 //                             <li class='list-inline-item'>
 //                             <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-id='$id '><i class='fas fa-check-circle'></i></a>
 //                             </li>
@@ -205,52 +201,52 @@ else{
 //                             <a href='#' class='text-danger p-2 delete-btn' data-item-id='$id '> <i class='fas fa-times-circle'></i></a>
 //                         </li></td>";
 // echo "</tr>";
-?>
+                                                                ?>
 
-                                                    <td>
-                                                        <button class='btn btn-info btn-sm dropdown-toggle'
-                                                            type='button' data-bs-toggle='dropdown' aria-haspopup='true'
-                                                            aria-expanded='false'
-                                                            data-item-id='<?php echo $id; ?>'>Action</button>
-                                                        <div class='dropdown-menu dropdown-menu-end  '>
-                                                            <a class='dropdown-item text-danger p-2 receipt-btn'
-                                                                data-bs-toggle='modal' data-bs-target='.receiptModal'
-                                                                data-item-id='<?php echo $id; ?>' href='#'><i
-                                                                    class='bx bxs-edit-alt'></i>Reception</a>
-                                                            <a class='dropdown-item text-danger p-2 adjust-btn'
-                                                                data-bs-toggle='modal' data-bs-target='.adjustmentModal'
-                                                                data-item-id='<?php echo $id; ?>' href='#'><i
-                                                                    class='bx bxs-edit-alt'></i>Reception</a>
+                                                                <td>
+                                                                    <button class='btn btn-info btn-sm dropdown-toggle'
+                                                                        type='button' data-bs-toggle='dropdown' aria-haspopup='true'
+                                                                        aria-expanded='false'
+                                                                        data-item-id='<?php echo $id; ?>'>Action</button>
+                                                                    <div class='dropdown-menu dropdown-menu-end  '>
+                                                                        <a class='dropdown-item text-danger p-2 receipt-btn'
+                                                                            data-bs-toggle='modal' data-bs-target='.receiptModal'
+                                                                            data-item-id='<?php echo $id; ?>' href='#'><i
+                                                                                class='bx bxs-edit-alt'></i>Reception</a>
+                                                                        <a class='dropdown-item text-danger p-2 adjust-btn'
+                                                                            data-bs-toggle='modal' data-bs-target='.adjustmentModal'
+                                                                            data-item-id='<?php echo $id; ?>' href='#'><i
+                                                                                class='bx bxs-edit-alt'></i>Adjustment</a>
 
 
-                                                            <a class='dropdown-item text-secondary p-2 cancel-btn'
-                                                                data-bs-toggle='modal' data-item-id='<?php echo $id; ?>'
-                                                                href='#'><i class='bx bxs-cancel'></i><i
-                                                                    class='bx bxs-edit-alt'></i>Cancel</a>
-                                                            <a class='dropdown-item text-dark p-2 refund-btn'
-                                                                data-bs-toggle='modal' data-bs-target='.refundModal'
-                                                                data-item-id='<?php echo $id; ?>' href='#'><i
-                                                                    class='bx bxs-edit-alt'></i>close</a>
-                                                            <!-- <a class='dropdown-item text-secondary p-2 delete-btn' data-bs-toggle='modal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-trash'></i>Delete</a>
+                                                                        <a class='dropdown-item text-secondary p-2 cancel-btn'
+                                                                            data-bs-toggle='modal' data-item-id='<?php echo $id; ?>'
+                                                                            href='#'><i class='bx bxs-cancel'></i><i
+                                                                                class='bx bxs-edit-alt'></i>Cancel</a>
+                                                                        <a class='dropdown-item text-dark p-2 refund-btn'
+                                                                            data-bs-toggle='modal' data-bs-target='.refundModal'
+                                                                            data-item-id='<?php echo $id; ?>' href='#'><i
+                                                                                class='bx bxs-edit-alt'></i>close</a>
+                                                                        <!-- <a class='dropdown-item text-secondary p-2 delete-btn' data-bs-toggle='modal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-trash'></i>Delete</a>
     
     
     <a class='dropdown-item text-secondary p-2 cancel-btn-btn' data-bs-toggle='modal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-cancel'></i><i class='bx bxs-edit-alt'></i>Cancel</a> -->
-                                                        </div>
-                                                    </td>
-                                                    <?php
+                                                                    </div>
+                                                                </td>
+                                                                <?php
 
-                            // echo "</tr>";
-                            $n+=+1;
-                        }
-                    } else {
-                        echo "<tr><td colspan='6'>No Booking found</td></tr>";
-                    }
-                } else {
-                    echo "Error: " . mysqli_error($conn);
-                }
+                                                                // echo "</tr>";
+                                                                $n += +1;
+                                                            }
+                                                        } else {
+                                                            echo "<tr><td colspan='6'>No Booking found</td></tr>";
+                                                        }
+                                                    } else {
+                                                        echo "Error: " . mysqli_error($conn);
+                                                    }
 
-               
-            ?>
+
+                                                    ?>
 
 
                                                     </tbody>
@@ -273,8 +269,8 @@ else{
         <!-- Add this at the end of the <body> section of your HTML, just before </body> -->
 
         <!-- adjustmentModal Modal -->
-        <div class="modal fade " id="adjustmentModal" tabindex="-1" role="dialog"
-            aria-labelledby="orderdetailsModalLabel" aria-hidden="true">
+        <div class="modal fade adjustmentModal " tabindex="-1" role="dialog" aria-labelledby="orderdetailsModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -402,117 +398,119 @@ else{
         <!-- Add this to your HTML file -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
         <script>
-        $(document).ready(function() {
-            function cancel(itemId) {
-                $.ajax({
-                    url: "../../../apis/booking/cancel.php",
-                    method: 'POST',
-                    data: {
-                        itemId: itemId
-                    },
-                    success: function(response) {
-                        window.location.href = 'bookingsHistory.php';
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(error);
-                    }
-                });
-            }
-
-            $('.cancel-btn').click(function(e) {
-                e.preventDefault();
-                var itemId = $(this).data('item-id');
-                cancel(itemId);
-            });
-
-            $('.adjust-btn').click(function() {
-                var id = parseInt($(this).data('item-id'), 10);
-                $.ajax({
-                    url: "fetch_adjustment.php",
-                    type: 'POST',
-                    data: {
-                        rid: id
-                    },
-                    success: function(response) {
-                        var bdata = JSON.parse(response);
-                        $('#start_date').val(bdata.start_date);
-                        $('#end_date').val(bdata.end_date);
-                        $('#start_time').val(bdata.starttime);
-                        $('#end_time').val(bdata.endtime);
-                    }
-                });
-            });
-
-            $("#updateForm").submit(function(e) {
-                e.preventDefault();
-                $.ajax({
-                    url: "adjustment.php",
-                    data: new FormData($(this)[0]),
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    method: 'POST',
-                    success: function(resp) {
-                        var res = JSON.parse(resp);
-                        handleResponse(res);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error fetching data:', error);
-                    }
-                });
-            });
-
-            $('.receipt-btn').click(function() {
-                var rid = parseInt($(this).data('item-id'), 10);
-                $.ajax({
-                    url: "../../../apis/booking/getReceiption.php",
-                    type: 'POST',
-                    data: {
-                        rid: rid
-                    },
-                    success: function(response) {
-                        var bdata = JSON.parse(response);
-                        $('#rcname').val(bdata.cname);
-                        $('#rdue').val(bdata.balance);
-                        $('#rbid').val(bdata.bid);
-                    }
-                });
-            });
-
-            $("#Receipt").submit(function(e) {
-                e.preventDefault();
-                $.ajax({
-                    url: "receipt.php",
-                    data: new FormData($(this)[0]),
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    method: 'POST',
-                    success: function(resp) {
-                        var res = JSON.parse(resp);
-                        handleResponse(res);
-                    }
-                });
-            });
-
-            function handleResponse(res) {
-                if (res.status == 200) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: res.message,
-                    }).then((result) => {
-                        if (result.isConfirmed) {
+            $(document).ready(function () {
+                function cancel(itemId) {
+                    $.ajax({
+                        url: "../../../apis/booking/cancel.php",
+                        method: 'POST',
+                        data: {
+                            itemId: itemId
+                        },
+                        success: function (response) {
                             window.location.href = 'bookingsHistory.php';
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(error);
                         }
                     });
-                } else if (res.status == 404) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: res.message,
-                    });
                 }
-            }
-        });
+
+                $('.cancel-btn').click(function (e) {
+                    e.preventDefault();
+                    var itemId = $(this).data('item-id');
+                    cancel(itemId);
+                });
+
+                $('.adjust-btn').click(function () {
+                    var id = parseInt($(this).data('item-id'), 10);
+                    $.ajax({
+                        url: "fetch_adjustment.php",
+                        type: 'POST',
+                        data: {
+                            rid: id
+                        },
+                        success: function (response) {
+                            var bdata = JSON.parse(response);
+                            $('#start_date').val(bdata.start_date);
+                            $('#end_date').val(bdata.end_date);
+                            $('#start_time').val(bdata.starttime);
+                            $('#end_time').val(bdata.endtime);
+                            $('#end_time').val(bdata.endtime);
+                            $('#bid').val(bdata.bid);
+                        }
+                    });
+                });
+
+                $("#updateForm").submit(function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        url: "adjustment.php",
+                        data: new FormData($(this)[0]),
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        method: 'POST',
+                        success: function (resp) {
+                            var res = JSON.parse(resp);
+                            handleResponse(res);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error fetching data:', error);
+                        }
+                    });
+                });
+
+                $('.receipt-btn').click(function () {
+                    var rid = parseInt($(this).data('item-id'), 10);
+                    $.ajax({
+                        url: "../../../apis/booking/getReceiption.php",
+                        type: 'POST',
+                        data: {
+                            rid: rid
+                        },
+                        success: function (response) {
+                            var bdata = JSON.parse(response);
+                            $('#rcname').val(bdata.cname);
+                            $('#rdue').val(bdata.balance);
+                            $('#rbid').val(bdata.bid);
+                        }
+                    });
+                });
+
+                $("#Receipt").submit(function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        url: "receipt.php",
+                        data: new FormData($(this)[0]),
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        method: 'POST',
+                        success: function (resp) {
+                            var res = JSON.parse(resp);
+                            handleResponse(res);
+                        }
+                    });
+                });
+
+                function handleResponse(res) {
+                    if (res.status == 200) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: res.message,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'bookingsHistory.php';
+                            }
+                        });
+                    } else if (res.status == 404) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: res.message,
+                        });
+                    }
+                }
+            });
         </script>

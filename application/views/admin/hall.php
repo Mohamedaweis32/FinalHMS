@@ -173,6 +173,7 @@ include '../../../conn.php';
                                 <div class="alert alert-success" id="success"></div>
                                 <input type="hidden" name="hall_id" id="hall_id">
 
+                                <input type="hidden" id='hiddenPhoto' name='hiddenPhoto'>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
@@ -222,6 +223,7 @@ include '../../../conn.php';
                                         <label for="formrow-address-input" class="form-label">Hall Photo</label>
                                         <input type="file" class="form-control" id="hphoto" name="hphoto"
                                             placeholder="Enter Company Logo">
+                                        <p class="file-label"></p>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -455,10 +457,14 @@ include '../../../conn.php';
                         $('#hlocation').val(hallData.hlocation);
                         $('#hdesc').val(hallData.hdesc);
                         $('#hcapacity').val(hallData.hcapacity);
+                        $('#hiddenPhoto').val(hallData.hphoto);
 
                         // Display the selected image filename
-                        var filename = "../../" + hallData.hphoto.split('/').pop();
+                        var filename = hallData.hphoto.split('/').pop();
                         $('#hphoto').siblings('.file-label').text(filename);
+
+                        // Set the image source
+
 
                         // Set the image source
                         console.log(hallData)
@@ -519,8 +525,7 @@ include '../../../conn.php';
         //             console.error(error);
         //         }
         //     });
-        // }
-
+        // }function deleteItem(itemId) {
         function deleteItem(itemId) {
             Swal.fire({
                 title: 'Are you sure?',
@@ -539,20 +544,34 @@ include '../../../conn.php';
                         data: {
                             itemId: itemId
                         },
-                        success: function (response) {
-                            Swal.fire({
-                                title: 'Deleted!',
-                                text: 'The item has been deleted.',
-                                icon: 'success',
-                                timer: 2000, // Show success message for 2 seconds
-                                timerProgressBar: true,
-                                showConfirmButton: false
-                            });
+                        success: function (resp) {
+                            var res = jQuery.parseJSON(resp);
 
-                            // Redirect after deletion
-                            setTimeout(function () {
-                                window.location.href = 'hall.php';
-                            }, 2000);
+                            if (res.status == 200) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: res.message,
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        setTimeout(function () {
+                                            window.location.href = 'hall.php';
+                                        }, 2000);
+                                    }
+                                });
+                            } else if (res.status == 404) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: res.message,
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        setTimeout(function () {
+                                            window.location.href = 'hall.php';
+                                        }, 2000);
+                                    }
+                                });
+                            }
                         },
                         error: function (xhr, status, error) {
                             // Handle errors
