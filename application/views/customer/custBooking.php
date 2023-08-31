@@ -85,6 +85,16 @@ function handleFacilities(&$selectedFacilities) {
     }
 }
 
+
+if ($startDate || $endDate < $date ) {
+    $result = [
+        'message' => 'THIS DATE HAS ALREADY BEING PASSED CHOOSE VALID DATE',
+        'status' => 404
+    ];
+    echo json_encode($result);
+    exit;
+} 
+
 // Start transaction
 mysqli_begin_transaction($conn, MYSQLI_TRANS_START_READ_WRITE);
 
