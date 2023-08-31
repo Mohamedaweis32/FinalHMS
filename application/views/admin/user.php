@@ -122,7 +122,7 @@
                             echo "<td>$type</td>";
                             echo "<td>
                             <li class='list-inline-item'>
-                            <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' item-id='$userid'><i class='bx bxs-edit-alt'></i></a>
+                            <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-item-id='$userid'><i class='bx bxs-edit-alt'></i></a>
                             </li>
                             <li class='list-inline-item'>
                             <a href='#' class='text-danger p-2 delete-btn' data-item-id='$userid'><i class='bx bxs-trash'></i></a>
@@ -265,7 +265,8 @@ $(document).ready(function() {
 
     })
     $('.edit-btn').click(function() {
-        var user_id = parseInt($(this).data('id'), 10);
+        var user_id = $(this).data('item-id');
+        console.log(user_id)
         $.ajax({
             url: "../../../apis/users/getusers.php",
             type: 'POST',
@@ -273,6 +274,7 @@ $(document).ready(function() {
                 user_id: user_id
             },
             success: function(response) {
+                console.log(response)
                 var userData = JSON.parse(response);
 
                 $('#uname').val(userData.name);
@@ -302,25 +304,31 @@ $(document).ready(function() {
             type: 'POST',
             dataType: 'json', // Specify that the response is JSON
             success: function(resp) {
-                console.log(resp); // Corrected typo
-
+                console.log(resp); // Print the response to the console
                 if (resp.status == 200) {
+                    // Show success alert
                     Swal.fire({
                         icon: 'success',
-                        title: 'Success',
+                        title: 'Success!',
                         text: resp.message,
-                        onClose: () => window.location
-                            .reload() // Reload the page after the timer expires
+                        timer: 2000, // Show success message for 2 seconds
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    }).then(() => {
+                        // Reload the page after the timer expires
+                        window.location.reload();
                     });
-
                 } else if (resp.status == 404) {
+                    // Show error alert
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error',
-                        text: resp.message
+                        title: 'Error!',
+                        text: resp.message,
+                        confirmButtonText: 'OK'
                     });
                 }
             },
+
             error: function(xhr, textStatus, errorThrown) {
                 Swal.fire({
                     icon: 'error',
@@ -356,21 +364,9 @@ function deleteItem(itemId) {
                 data: {
                     itemId: itemId
                 },
-                success: function(response) {
-                    if (response.status == 200) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Deleted',
-                            text: 'The item has been successfully deleted.',
-                        }).then(() => {
-                            // After showing the success alert, redirect to 'user.php'
-                            window.location.href = 'user.php';
-                        });
-                    } else if (response.status == 404) { // Change "elseif" to "else if"
-                        // Handle the case when status is 404
-                    } else {
-                        // Handle other cases or errors
-                    }
+                success: function(resp) {
+                    window.location.reload();
+
                 },
                 error: function(xhr, status, error) {
                     // Use SweetAlert error alert

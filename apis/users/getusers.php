@@ -23,7 +23,9 @@ if (isset($_POST['user_id'])) {
                 
             ];
             echo json_encode($USerData);
+            return;
         } else {
-            echo json_encode(['error' => 'Customer Not found']);
+            echo json_encode(['error' => 'Users Not found']);
+            return;
         }
     }

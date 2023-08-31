@@ -10,13 +10,17 @@ if(isset($_POST["itemId"])){
    $sucess= allqueryHandler($conn,$sql);
    if ($sucess){
     $result = [
-        'message' => 'Failed to update user.',
-        'status' => 404
+        'message' => 'User Deleted Successfully.',
+        'status' => 200
     ];
+    echo json_encode($result);
+    return;
    }
   $result = [
-        'message' => 'Failed to update user.',
+        'message' => 'Failed to Delete user.',
         'status' => 404
     ];
+    echo json_encode($result);
+    return;
 
  }

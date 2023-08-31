@@ -1,29 +1,29 @@
-<?php include 'header.php'; 
-include 'nav.php'; 
-include '../../../conn.php'; 
+<?php include 'header.php';
+include 'nav.php';
+include '../../../conn.php';
 ?>
 <style>
-.btn-primary {
-    color: #fff;
-    background-color: #00487a !important;
-    border-color: #00487a !important;
-}
+    .btn-primary {
+        color: #fff;
+        background-color: #00487a !important;
+        border-color: #00487a !important;
+    }
 
-.selected-image-container {
-    text-align: center;
-}
+    .selected-image-container {
+        text-align: center;
+    }
 
-#selected-image {
-    max-width: 100%;
-    max-height: 200px;
-    border-radius: 50px;
-}
+    #selected-image {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 50px;
+    }
 
-.logo-thumbnail {
-    max-width: 100px;
-    max-height: 100px;
-    border-radius: 50px;
-}
+    .logo-thumbnail {
+        max-width: 100px;
+        max-height: 100px;
+        border-radius: 50px;
+    }
 </style>
 
 
@@ -95,36 +95,36 @@ include '../../../conn.php';
                                             </thead>
                                             <tbody>
                                                 <?php
-                // Select query
-                $sql = "SELECT * FROM halls WHERE 1";
-                $result = mysqli_query($conn, $sql);
+                                                // Select query
+                                                $sql = "SELECT * FROM halls WHERE 1";
+                                                $result = mysqli_query($conn, $sql);
 
-                // Check if the query was successful
-                if ($result) {
-                    // Check if there are any rows returned
-                    if (mysqli_num_rows($result) > 0) {
-                        while ($row = mysqli_fetch_assoc($result)) {
-                            $hall_id = $row['hall_id'];
-                            $type = $row['hall_type'];
-                            $price = $row['hallPrice'];
-                            $location = $row['location'];
-                            $capacity = $row['capacity'];
-                            $desc = $row['hall_desc'];
-                            $date = $row['date'];
-                            $photo = $row['hall_photo'];
+                                                // Check if the query was successful
+                                                if ($result) {
+                                                    // Check if there are any rows returned
+                                                    if (mysqli_num_rows($result) > 0) {
+                                                        while ($row = mysqli_fetch_assoc($result)) {
+                                                            $hall_id = $row['hall_id'];
+                                                            $type = $row['hall_type'];
+                                                            $price = $row['hallPrice'];
+                                                            $location = $row['location'];
+                                                            $capacity = $row['capacity'];
+                                                            $desc = $row['hall_desc'];
+                                                            $date = $row['date'];
+                                                            $photo = $row['hall_photo'];
 
-                            // Display the data
-                            echo "<tr>";
-                            echo "<td>$hall_id</td>";
-                            echo "<td>$type</td>";
-                            echo "<td>$price</td>";
-                            echo "<td>$location</td>";
-                            echo "<td>$capacity</td>";
-                            echo "<td>$desc</td>";
-                            echo "<td>$date</td>";
-                            
-                            echo "<td><img src='../../../images/$photo' alt='Halls Logo' class='logo-thumbnail'></td>";
-                            echo "<td>
+                                                            // Display the data
+                                                            echo "<tr>";
+                                                            echo "<td>$hall_id</td>";
+                                                            echo "<td>$type</td>";
+                                                            echo "<td>$price</td>";
+                                                            echo "<td>$location</td>";
+                                                            echo "<td>$capacity</td>";
+                                                            echo "<td>$desc</td>";
+                                                            echo "<td>$date</td>";
+
+                                                            echo "<td><img src='../../../images/$photo' alt='Halls Logo' class='logo-thumbnail'></td>";
+                                                            echo "<td>
                             
                             <li class='list-inline-item'>
                             <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.hallModal' data-id='$hall_id'><i class='bx bxs-edit-alt'></i></a>
@@ -132,17 +132,17 @@ include '../../../conn.php';
                             <li class='list-inline-item'>
                             <a href='#' class='text-danger p-2 delete-btn' data-item-id='$hall_id'><i class='bx bxs-trash'></i></a>
                         </li></td>";
-                            echo "</tr>";
-                        }
-                    } else {
-                        echo "<tr><td colspan='6'>No Halls found</td></tr>";
-                    }
-                } else {
-                    echo "Error: " . mysqli_error($conn);
-                }
+                                                            echo "</tr>";
+                                                        }
+                                                    } else {
+                                                        echo "<tr><td colspan='6'>No Halls found</td></tr>";
+                                                    }
+                                                } else {
+                                                    echo "Error: " . mysqli_error($conn);
+                                                }
 
-                mysqli_close($conn);
-            ?>
+                                                mysqli_close($conn);
+                                                ?>
 
 
                                             </tbody>
@@ -249,18 +249,18 @@ include '../../../conn.php';
     <!-- <script src="../../../js/halls.js"></script> -->
 
     <style>
-    /* Custom styles for the table */
-    .dataTables_wrapper {
-        padding: 20px;
-    }
+        /* Custom styles for the table */
+        .dataTables_wrapper {
+            padding: 20px;
+        }
 
-    .dataTables_filter {
-        float: right;
-    }
+        .dataTables_filter {
+            float: right;
+        }
 
-    .dataTables_paginate {
-        float: right;
-    }
+        .dataTables_paginate {
+            float: right;
+        }
     </style>
     <!-- Include jQuery, Bootstrap, and DataTables -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -274,292 +274,292 @@ include '../../../conn.php';
 
 
     <script>
-    $(document).ready(function() {
+        $(document).ready(function () {
 
-        $('#tblHall ').DataTable();
-        $('.dataTables_length').addClass('bs-select');
+            $('#tblHall ').DataTable();
+            $('.dataTables_length').addClass('bs-select');
 
-        $('.delete-btn').click(function(e) {
+            $('.delete-btn').click(function (e) {
+                e.preventDefault();
+                var itemId = $(this).data('item-id');
+                deleteItem(itemId);
+            });
+
+            $("#error").css("display", "none");
+            $("#success").css("display", "none");
+
+        })
+
+        $(document).ready(function () {
+            $('.delete-btn').click(function (e) {
+                e.preventDefault();
+                var itemId = $(this).data('item-id');
+                deleteItem(itemId);
+            });
+
+
+
+        })
+        // $("#hall_form").submit(function(e) {
+        //     e.preventDefault();
+        //     $.ajax({
+        //         url: "../../../apis/halls.php",
+        //         data: new FormData($(this)[0]),
+        //         cache: false,
+        //         contentType: false,
+        //         processData: false,
+        //         method: 'POST',
+        //         type: 'POST',
+        //         success: function(resp) {
+        //             alert(resp)
+        //             var res = jQuery.parseJSON(resp);
+        //             if (res.status == 200) {
+        //                 window.location.href = 'hall.php';
+        //                 //    $("#success").css("display", "block");
+        //                 //     $("#success").text(res.message);
+        //             } else if (res.status == 404) {
+        //                 //   $("#success").css("display", "none");
+        //                 //    $("#error").css("display", "block");
+        //                 //    $("#error").text(res.message);
+        //             }
+
+        //         }
+        //     });
+
+
+        // });
+
+        $("#hall_form").submit(function (e) {
             e.preventDefault();
-            var itemId = $(this).data('item-id');
-            deleteItem(itemId);
-        });
+            if (!validateForm()) {
+                showValidationErrorAlert();
 
-        $("#error").css("display", "none");
-        $("#success").css("display", "none");
-
-    })
-
-    $(document).ready(function() {
-        $('.delete-btn').click(function(e) {
-            e.preventDefault();
-            var itemId = $(this).data('item-id');
-            deleteItem(itemId);
-        });
-
-
-
-    })
-    // $("#hall_form").submit(function(e) {
-    //     e.preventDefault();
-    //     $.ajax({
-    //         url: "../../../apis/halls.php",
-    //         data: new FormData($(this)[0]),
-    //         cache: false,
-    //         contentType: false,
-    //         processData: false,
-    //         method: 'POST',
-    //         type: 'POST',
-    //         success: function(resp) {
-    //             alert(resp)
-    //             var res = jQuery.parseJSON(resp);
-    //             if (res.status == 200) {
-    //                 window.location.href = 'hall.php';
-    //                 //    $("#success").css("display", "block");
-    //                 //     $("#success").text(res.message);
-    //             } else if (res.status == 404) {
-    //                 //   $("#success").css("display", "none");
-    //                 //    $("#error").css("display", "block");
-    //                 //    $("#error").text(res.message);
-    //             }
-
-    //         }
-    //     });
-
-
-    // });
-
-    $("#hall_form").submit(function(e) {
-        e.preventDefault();
-        if (!validateForm()) {
-            showValidationErrorAlert();
-
-        } else {
-            $.ajax({
-                url: "../../../apis/halls.php",
-                data: new FormData($(this)[0]),
-                cache: false,
-                contentType: false,
-                processData: false,
-                method: 'POST',
-                type: 'POST',
-                success: function(resp) {
-                    var res = jQuery.parseJSON(resp);
-                    if (res.status == 200) {
-                        // Show success alert
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: res.message,
-                            timer: 2000, // Show success message for 2 seconds
-                            timerProgressBar: true,
-                            showConfirmButton: false
-                        });
-                        // Redirect after success
-                        setTimeout(function() {
-                            window.location.href = 'hall.php';
-                        }, 2000);
-                    } else if (res.status == 404) {
-                        // Show error alert
+            } else {
+                $.ajax({
+                    url: "../../../apis/halls.php",
+                    data: new FormData($(this)[0]),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    method: 'POST',
+                    type: 'POST',
+                    success: function (resp) {
+                        var res = jQuery.parseJSON(resp);
+                        if (res.status == 200) {
+                            // Show success alert
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: res.message,
+                                timer: 2000, // Show success message for 2 seconds
+                                timerProgressBar: true,
+                                showConfirmButton: false
+                            });
+                            // Redirect after success
+                            setTimeout(function () {
+                                window.location.href = 'hall.php';
+                            }, 2000);
+                        } else if (res.status == 404) {
+                            // Show error alert
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: res.message,
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle errors
+                        console.error(error);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
-                            text: res.message,
+                            text: 'An error occurred during submission.',
                             confirmButtonText: 'OK'
                         });
-                    }
-                },
-                error: function(xhr, status, error) {
-                    // Handle errors
-                    console.error(error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'An error occurred during submission.',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            });
-        }
-    });
-
-    function validateForm() {
-        const htype = $("#htype").val();
-        const hlocation = $("#hlocation").val();
-        const hcapacity = $("#hcapacity").val();
-        const hprice = $("#hprice").val();
-        const hdesc = $("#hdesc").val();
-        const image = $("#hphoto").val();
-
-        return htype && hlocation && hcapacity && hprice && hdesc && image;
-    }
-
-    function showValidationErrorAlert() {
-        Swal.fire({
-            icon: 'error',
-            title: 'Validation Error',
-            text: 'All fields are required. Please fill out all the required fields.',
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'OK'
-        });
-        // return;
-    }
-
-    $(document).ready(function() {
-        // When a file is selected, display the image
-        $('#hphoto').change(function(e) {
-            var file = e.target.files[0];
-            var reader = new FileReader();
-
-            reader.onload = function(e) {
-                $('#selected-image').attr('src', e.target.result);
-                $("#img-selected").html(`
-                        <img id=" selected-image" class="rounded-lg" src="${e.target.result}" alt="Perview Hall Photo" width="400" height="200">
-                    `)
-            }
-
-            reader.readAsDataURL(file);
-        });
-    });
-
-    function closeModal() {
-        $("#img-selected").html(`
-            <img id=" selected-image" class="rounded-lg" src="" alt="Perview Hall Photo" width="400" height="200">
-        `)
-        $("#hallModal").modal("show")
-
-        $("#htype").val('')
-        $("#hlocation").val('')
-        $("#hcapacity").val('')
-        $("#hprice").val('')
-        $("#hdesc").val('')
-
-    }
-
-    $(document).ready(function() {
-        $('.edit-btn').click(function() {
-            var hallid = parseInt($(this).data('id'), 10);
-            $.ajax({
-                url: '../../../apis/halls/gethalls.php',
-                type: 'POST',
-                data: {
-                    hallid: hallid
-                },
-                success: function(response) {
-                    var hallData = JSON.parse(response);
-
-                    // Set the values in the form
-                    $('#htype').val(hallData.htype);
-                    $('#hall_id').val(hallData.hid);
-                    $('#hprice').val(hallData.hprice);
-                    $('#hlocation').val(hallData.hlocation);
-                    $('#hdesc').val(hallData.hdesc);
-                    $('#hcapacity').val(hallData.hcapacity);
-
-                    // Display the selected image filename
-                    var filename = "../../" + hallData.hphoto.split('/').pop();
-                    $('#hphoto').siblings('.file-label').text(filename);
-
-                    // Set the image source
-                    console.log(hallData)
-                    $("#img-selected").html(`
-                        <img id=" selected-image" class="rounded-lg" src="../../${hallData.hphoto}" alt="Perview Hall Photo" width="400" height="200">
-                    `)
-                    // $('#selected-image').attr('src', `../../${hallData.hphoto}`);
-                },
-                error: function(xhr, status, error) {
-                    // Handle errors
-                    console.error(error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'An error occurred while fetching data.',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            });
-        });
-    });
-
-
-
-    function convertRelativePathToAbsolute(relativePath) {
-        // Get the current URL
-        var currentURL = window.location.href;
-
-        // Extract the base URL from the current URL
-        var baseURL = currentURL.substr(0, currentURL.lastIndexOf('/') + 1);
-
-        // Combine the base URL and the relative path
-        var absolutePath = baseURL + relativePath;
-
-        return absolutePath;
-    }
-
-    // Usage example
-
-
-
-
-
-
-
-    // function deleteItem(itemId) {
-    //     $.ajax({
-    //         url: '../../../apis/halls/delete.php',
-    //         method: 'POST',
-    //         data: { itemId: itemId },
-    //         success: function(response) {
-    //             window.location.href = 'hall.php';
-    //             console.log(response);
-    //             // Reload the page or update the UI as needed
-    //         },
-    //         error: function(xhr, status, error) {
-    //             // Handle errors
-    //             console.error(error);
-    //         }
-    //     });
-    // }
-
-    function deleteItem(itemId) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'You won\'t be able to revert this!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // User confirmed, proceed with deletion
-                $.ajax({
-                    url: '../../../apis/halls/delete.php',
-                    method: 'POST',
-                    data: {
-                        itemId: itemId
-                    },
-                    success: function(response) {
-                        Swal.fire({
-                            title: 'Deleted!',
-                            text: 'The item has been deleted.',
-                            icon: 'success',
-                            timer: 2000, // Show success message for 2 seconds
-                            timerProgressBar: true,
-                            showConfirmButton: false
-                        });
-
-                        // Redirect after deletion
-                        setTimeout(function() {
-                            window.location.href = 'hall.php';
-                        }, 2000);
-                    },
-                    error: function(xhr, status, error) {
-                        // Handle errors
-                        console.error(error);
                     }
                 });
             }
         });
-    }
+
+        function validateForm() {
+            const htype = $("#htype").val();
+            const hlocation = $("#hlocation").val();
+            const hcapacity = $("#hcapacity").val();
+            const hprice = $("#hprice").val();
+            const hdesc = $("#hdesc").val();
+            const imageSrc = $(".selected-image-container img").attr("src");
+            const imageUrl = imageSrc != '' ? imageSrc : '';
+
+            return htype && hlocation && hcapacity && hprice && hdesc && imageUrl;
+        }
+
+        function showValidationErrorAlert() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                text: 'All fields are required. Please fill out all the required fields.',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            });
+        }
+
+        $(document).ready(function () {
+            // When a file is selected, display the image
+            $('#hphoto').change(function (e) {
+                var file = e.target.files[0];
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#selected-image').attr('src', e.target.result);
+                    $("#img-selected").html(`
+                        <img id=" selected-image" class="rounded-lg" src="${e.target.result}" alt="Perview Hall Photo" width="400" height="200">
+                    `)
+                }
+
+                reader.readAsDataURL(file);
+            });
+        });
+
+        function closeModal() {
+            $("#img-selected").html(`
+            <img id=" selected-image" class="rounded-lg" src="" alt="Perview Hall Photo" width="400" height="200">
+        `)
+            $("#hallModal").modal("show")
+
+            $("#htype").val('')
+            $("#hlocation").val('')
+            $("#hcapacity").val('')
+            $("#hprice").val('')
+            $("#hdesc").val('')
+
+        }
+
+        $(document).ready(function () {
+            $('.edit-btn').click(function () {
+                var hallid = parseInt($(this).data('id'), 10);
+                $.ajax({
+                    url: '../../../apis/halls/gethalls.php',
+                    type: 'POST',
+                    data: {
+                        hallid: hallid
+                    },
+                    success: function (response) {
+                        var hallData = JSON.parse(response);
+
+                        // Set the values in the form
+                        $('#htype').val(hallData.htype);
+                        $('#hall_id').val(hallData.hid);
+                        $('#hprice').val(hallData.hprice);
+                        $('#hlocation').val(hallData.hlocation);
+                        $('#hdesc').val(hallData.hdesc);
+                        $('#hcapacity').val(hallData.hcapacity);
+
+                        // Display the selected image filename
+                        var filename = "../../" + hallData.hphoto.split('/').pop();
+                        $('#hphoto').siblings('.file-label').text(filename);
+
+                        // Set the image source
+                        console.log(hallData)
+                        $("#img-selected").html(`
+                        <img id=" selected-image" class="rounded-lg" src="../../${hallData.hphoto}" alt="Perview Hall Photo" width="400" height="200">
+                    `)
+                        // $('#selected-image').attr('src', `../../${hallData.hphoto}`);
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle errors
+                        console.error(error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'An error occurred while fetching data.',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            });
+        });
+
+
+
+        function convertRelativePathToAbsolute(relativePath) {
+            // Get the current URL
+            var currentURL = window.location.href;
+
+            // Extract the base URL from the current URL
+            var baseURL = currentURL.substr(0, currentURL.lastIndexOf('/') + 1);
+
+            // Combine the base URL and the relative path
+            var absolutePath = baseURL + relativePath;
+
+            return absolutePath;
+        }
+
+        // Usage example
+
+
+
+
+
+
+
+        // function deleteItem(itemId) {
+        //     $.ajax({
+        //         url: '../../../apis/halls/delete.php',
+        //         method: 'POST',
+        //         data: { itemId: itemId },
+        //         success: function(response) {
+        //             window.location.href = 'hall.php';
+        //             console.log(response);
+        //             // Reload the page or update the UI as needed
+        //         },
+        //         error: function(xhr, status, error) {
+        //             // Handle errors
+        //             console.error(error);
+        //         }
+        //     });
+        // }
+
+        function deleteItem(itemId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // User confirmed, proceed with deletion
+                    $.ajax({
+                        url: '../../../apis/halls/delete.php',
+                        method: 'POST',
+                        data: {
+                            itemId: itemId
+                        },
+                        success: function (response) {
+                            Swal.fire({
+                                title: 'Deleted!',
+                                text: 'The item has been deleted.',
+                                icon: 'success',
+                                timer: 2000, // Show success message for 2 seconds
+                                timerProgressBar: true,
+                                showConfirmButton: false
+                            });
+
+                            // Redirect after deletion
+                            setTimeout(function () {
+                                window.location.href = 'hall.php';
+                            }, 2000);
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle errors
+                            console.error(error);
+                        }
+                    });
+                }
+            });
+        }
     </script>
