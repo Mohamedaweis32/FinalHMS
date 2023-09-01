@@ -134,7 +134,8 @@
 <!-- JavaScript/jQuery code -->
 <script>
     // Function to handle the "Approve" button click
-    $('.approve-btn').on('click', func tion(event) {
+    $('.approve-btn').on('click', function (event) {
+        // alert("new");
         event.preventDefault();
         var aproveid = $(this).data('id');
 
@@ -147,11 +148,11 @@
                 booking_status: 'approve', // Change to 'rejected' for the Reject button
 
             },
-            success: func tion(response) {
+            success: function (response) {
                 // Handle the response if needed
                 window.location.href = "adminnotification.php";
             },
-            error: func tion(xhr, status, error) {
+            error: function (xhr, status, error) {
                 // Handle errors if any
                 console.error(error);
             }
@@ -159,7 +160,8 @@
     });
 
     // Function to handle the "Reject" button click
-    $('.reject-btn').on('click', func tion(event) {
+    $('.reject-btn').on('click', function (event) {
+        // alert("new");
         event.preventDefault();
         var rid = $(this).data('id');
 
@@ -171,11 +173,11 @@
                 rid: rid,
                 booking_status: 'reject', // Change to 'approved' for the Approve button
             },
-            success: func tion(response) {
+            success: function (response) {
                 // Handle the response if needed
                 window.location.href = "adminnotification.php";
             },
-            error: func tion(xhr, status, error) {
+            error: function (xhr, status, error) {
                 // Handle errors if any
                 console.error(error);
             }
