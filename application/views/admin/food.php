@@ -74,50 +74,50 @@
                                             </thead>
                                             <tbody>
                                                 <?php
-                // Select query
-                $sql = "SELECT * FROM food WHERE 1";
-                $n=1;
-                $result = mysqli_query($conn, $sql);
+                                                // Select query
+                                                $sql = "SELECT * FROM food WHERE 1";
+                                                $n = 1;
+                                                $result = mysqli_query($conn, $sql);
 
-                // Check if the query was successful
-                if ($result) {
-                    // Check if there are any rows returned
-                    if (mysqli_num_rows($result) > 0) {
-                        while ($row = mysqli_fetch_assoc($result)) {
-                            $foodId = $row['foodId'];
-                            $type = $row['foodType'];
-                            $price = $row['foodPrice'];
-                            $date = $row['date'];
-                         
-                      
-                            // Display the data
-                            echo "<tr>";
-                            echo "<td>$n</td>";                         
-                            echo "<td>$type</td>";                         
-                            echo "<td>$price</td>";
-                         
-                            echo "<td>$date</td>";
-                          
-                            echo "<td>
+                                                // Check if the query was successful
+                                                if ($result) {
+                                                    // Check if there are any rows returned
+                                                    if (mysqli_num_rows($result) > 0) {
+                                                        while ($row = mysqli_fetch_assoc($result)) {
+                                                            $foodId = $row['foodId'];
+                                                            $type = $row['foodType'];
+                                                            $price = $row['foodPrice'];
+                                                            $date = $row['date'];
+
+
+                                                            // Display the data
+                                                            echo "<tr>";
+                                                            echo "<td>$n</td>";
+                                                            echo "<td>$type</td>";
+                                                            echo "<td>$price</td>";
+
+                                                            echo "<td>$date</td>";
+
+                                                            echo "<td>
                             <li class='list-inline-item'>
                             <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-id='$foodId'><i class='bx bxs-edit-alt'></i></a>
                             </li>
                             <li class='list-inline-item'>
                             <a href='#' class='text-danger p-2 delete-btn' data-item-id='$foodId'><i class='bx bxs-trash'></i></a>
                         </li></td>";
-                            echo "</tr>";
-                            $n++;
-                        }
-                      
-                    } else {
-                        echo "<tr><td colspan='6'>No Foods found</td></tr>";
-                    }
-                } else {
-                    echo "Error: " . mysqli_error($conn);
-                }
+                                                            echo "</tr>";
+                                                            $n++;
+                                                        }
 
-                mysqli_close($conn);
-            ?>
+                                                    } else {
+                                                        echo "<tr><td colspan='6'>No Foods found</td></tr>";
+                                                    }
+                                                } else {
+                                                    echo "Error: " . mysqli_error($conn);
+                                                }
+
+                                                mysqli_close($conn);
+                                                ?>
 
 
                                             </tbody>
@@ -184,18 +184,18 @@
 
 <?php include 'footer.php'; ?>
 <style>
-/* Custom styles for the table */
-.dataTables_wrapper {
-    padding: 20px;
-}
+    /* Custom styles for the table */
+    .dataTables_wrapper {
+        padding: 20px;
+    }
 
-.dataTables_filter {
-    float: right;
-}
+    .dataTables_filter {
+        float: right;
+    }
 
-.dataTables_paginate {
-    float: right;
-}
+    .dataTables_paginate {
+        float: right;
+    }
 </style>
 <!-- Include jQuery, Bootstrap, and DataTables -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -207,179 +207,183 @@
 
 
 <script>
-$(document).ready(function() {
+    $(document).ready(function () {
 
-    $('#tblCustomer').DataTable();
-    $('.dataTables_length').addClass('bs-select');
+        $('#tblCustomer').DataTable();
+        $('.dataTables_length').addClass('bs-select');
 
-    $('.delete-btn').click(function(e) {
+        $('.delete-btn').click(function (e) {
+            e.preventDefault();
+            var itemId = $(this).data('item-id');
+            deleteItem(itemId);
+        });
+
+        $("#error").css("display", "none");
+        $("#success").css("display", "none");
+
+    })
+
+
+
+    $(document).ready(function () {
+        $('.delete-btn').click(function (e) {
+            e.preventDefault();
+            var itemId = $(this).data('item-id');
+            deleteItem(itemId);
+        });
+
+        $("#error").css("display", "none");
+        $("#success").css("display", "none");
+
+    })
+    // $("#foods").submit(function(e){   
+    //          e.preventDefault();
+    //          $.ajax({
+    //             url:"../../../apis/food/foods.php",
+    //              data: new FormData($(this)[0]),
+    //             cache: false,
+    //             contentType: false,
+    //             processData: false,
+    //              method: 'POST',
+    //             type: 'POST',
+    //             success: function(resp) {
+    //             alert(resp)
+    //              var res = jQuery.parseJSON(resp);
+    //              if (res.status == 200) {
+    //                 window.location.href = 'food.php';
+    //             //    $("#success").css("display", "block");
+    //             //     $("#success").text(res.message);
+    //           }     else if (res.status == 404) {
+    //             //   $("#success").css("display", "none");
+    //             //    $("#error").css("display", "block");
+    //             //    $("#error").text(res.message);
+    //           }
+
+    //              }
+    //          });
+
+
+    //      });
+    $("#foods").submit(function (e) {
         e.preventDefault();
-        var itemId = $(this).data('item-id');
-        deleteItem(itemId);
-    });
 
-    $("#error").css("display", "none");
-    $("#success").css("display", "none");
+        var formData = new FormData($(this)[0]);
+        console.log(formData);
 
-})
-
-
-
-$(document).ready(function() {
-    $('.delete-btn').click(function(e) {
-        e.preventDefault();
-        var itemId = $(this).data('item-id');
-        deleteItem(itemId);
-    });
-
-    $("#error").css("display", "none");
-    $("#success").css("display", "none");
-
-})
-// $("#foods").submit(function(e){   
-//          e.preventDefault();
-//          $.ajax({
-//             url:"../../../apis/food/foods.php",
-//              data: new FormData($(this)[0]),
-//             cache: false,
-//             contentType: false,
-//             processData: false,
-//              method: 'POST',
-//             type: 'POST',
-//             success: function(resp) {
-//             alert(resp)
-//              var res = jQuery.parseJSON(resp);
-//              if (res.status == 200) {
-//                 window.location.href = 'food.php';
-//             //    $("#success").css("display", "block");
-//             //     $("#success").text(res.message);
-//           }     else if (res.status == 404) {
-//             //   $("#success").css("display", "none");
-//             //    $("#error").css("display", "block");
-//             //    $("#error").text(res.message);
-//           }
-
-//              }
-//          });
-
-
-//      });
-$("#foods").submit(function(e) {
-    e.preventDefault();
-
-    var formData = new FormData($(this)[0]);
-    console.log(formData)
-    $.ajax({
-        url: "../../../apis/food/foods.php",
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        method: 'POST',
-        type: 'POST',
-        dataType: 'json',
-        success: function(resp) {
-            var res = JSON.parse(resp);
-            if (res.status === 200) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: res.message,
-                    timer: 2000,
-                    showConfirmButton: false,
-                }).then(function() {
-                    window.location.href = 'food.php';
-                });
-            } else {
+        $.ajax({
+            url: "../../../apis/food/foods.php",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
+            dataType: 'json',
+            success: function (resp) {
+                if (resp.status === 200) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: resp.message,
+                        timer: 2000,
+                        showConfirmButton: false,
+                    }).then(function () {
+                        window.location.href = 'food.php';
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: resp.message,
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
-                    text: res.message,
+                    text: 'An error occurred while processing your request.',
                 });
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error(error);
-        }
-    });
-});
-
-
-
-$(document).ready(function() {
-    $('.edit-btn').click(function() {
-
-        var foodid = parseInt($(this).data('id'), 10);
-        $.ajax({
-            url: '../../../apis/food/getFood.php',
-            type: 'POST',
-            data: {
-                foodid: foodid
-            },
-            success: function(response) {
-                //  alert(response)
-                var foodata = JSON.parse(response);
-                $('#fid').val(foodata.fid);
-                $('#fprice').val(foodata.price);
-                $('#ftype').val(foodata.type);
-
-
-
             }
         });
     });
-});
 
 
-// function deleteItem(itemId) {
 
-//     $.ajax({
-//         url: '../../../apis/food/delete.php',
-//         method: 'POST',
-//         data: {
-//             itemId: itemId
-//         },
-//         success: function(response) {
-//             window.location.href = 'food.php';
-//             console.log(response);
-//             // Reload the page or update the UI as needed
-//         },
-//         error: function(xhr, status, error) {
-//             // Handle errors
-//             console.error(error);
-//         }
-//     });
-// }
+    $(document).ready(function () {
+        $('.edit-btn').click(function () {
 
-function deleteItem(itemId) {
-    // Show SweetAlert confirmation
-    Swal.fire({
-        title: 'Confirm Deletion',
-        text: 'Are you sure you want to delete this item?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: 'Cancel'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // If confirmed, proceed with deletion
+            var foodid = parseInt($(this).data('id'), 10);
             $.ajax({
-                url: '../../../apis/food/delete.php',
-                method: 'POST',
+                url: '../../../apis/food/getFood.php',
+                type: 'POST',
                 data: {
-                    itemId: itemId
+                    foodid: foodid
                 },
-                success: function(response) {
-                    window.location.href = 'food.php';
-                    console.log(response);
-                    // Reload the page or update the UI as needed
-                },
-                error: function(xhr, status, error) {
-                    // Handle errors
-                    console.error(error);
+                success: function (response) {
+                    //  alert(response)
+                    var foodata = JSON.parse(response);
+                    $('#fid').val(foodata.fid);
+                    $('#fprice').val(foodata.price);
+                    $('#ftype').val(foodata.type);
+
+
+
                 }
             });
-        }
+        });
     });
-}
+
+
+    // function deleteItem(itemId) {
+
+    //     $.ajax({
+    //         url: '../../../apis/food/delete.php',
+    //         method: 'POST',
+    //         data: {
+    //             itemId: itemId
+    //         },
+    //         success: function(response) {
+    //             window.location.href = 'food.php';
+    //             console.log(response);
+    //             // Reload the page or update the UI as needed
+    //         },
+    //         error: function(xhr, status, error) {
+    //             // Handle errors
+    //             console.error(error);
+    //         }
+    //     });
+    // }
+
+    function deleteItem(itemId) {
+        // Show SweetAlert confirmation
+        Swal.fire({
+            title: 'Confirm Deletion',
+            text: 'Are you sure you want to delete this item?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If confirmed, proceed with deletion
+                $.ajax({
+                    url: '../../../apis/food/delete.php',
+                    method: 'POST',
+                    data: {
+                        itemId: itemId
+                    },
+                    success: function (response) {
+                        window.location.href = 'food.php';
+                        console.log(response);
+                        // Reload the page or update the UI as needed
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle errors
+                        console.error(error);
+                    }
+                });
+            }
+        });
+    }
 </script>

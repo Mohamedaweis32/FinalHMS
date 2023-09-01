@@ -48,63 +48,63 @@ require_once "auth.php";
                 <div class="d-flex">
                 </div>
                 <audio id="notificationSound">
-                    <source src="mysound.wav" type="audio/mpeg" preload="auto>
-                   " Your browser does not support the audio element. </audio>
-                    <div class="d-flex">
-                        <div class="dropdown d-inline-block">
-                            <button type="button" class="btn header-item noti-icon waves-effect"
-                                id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                                <i class="bx bx-bell bx-tada"></i>
-                                <span class="badge bg-danger rounded-pill" id="notificationCount"></span>
+                    <source src="mysound.wav" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+                <div class="d-flex">
+                    <div class="dropdown d-inline-block">
+                        <button type="button" class="btn header-item noti-icon waves-effect"
+                            id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            <i class="bx bx-bell bx-tada"></i>
+                            <span class="badge bg-danger rounded-pill" id="notificationCount"></span>
 
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
-                                aria-labelledby="page-header-notifications-dropdown">
-                                <div class="p-3">
-                                    <div class="row align-items-center">
-                                        <div class="col">
-                                            <h6 class="m-0" key="t-notifications"> Notifications </h6>
-                                        </div>
-                                        <div class="col-auto">
-                                            <a href="#!" class="small" key="t-view-all" onclick="updateViewStatus()">
-                                                Mark
-                                                Read</a>
-                                        </div>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                            aria-labelledby="page-header-notifications-dropdown">
+                            <div class="p-3">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h6 class="m-0" key="t-notifications"> Notifications </h6>
+                                    </div>
+                                    <div class="col-auto">
+                                        <a href="#!" class="small" key="t-view-all" onclick="updateViewStatus()"> Mark
+                                            Read</a>
                                     </div>
                                 </div>
-                                <div id="notificationsContainer" data-simplebar style="max-height: 230px;">
-                                    <!-- Notifications will be populated here -->
-                                </div>
-
-                                <div class="p-2 border-top d-grid">
-                                    <a href='adminnotification.php' class="btn btn-sm btn-link font-size-14 text-center"
-                                        href="javascript:void(0)">
-                                        <i class="mdi mdi-arrow-right-circle me-1"></i> <span key="t-view-more">View
-                                            More..</span>
-                                    </a>
-                                </div>
                             </div>
-                        </div>
+                            <div id="notificationsContainer" data-simplebar style="max-height: 230px;">
+                                <!-- Notifications will be populated here -->
+                            </div>
 
-
-                        <div class="dropdown d-inline-block">
-                            <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
-                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img class="rounded-circle header-profile-user"
-                                    src="../../../assets/images/users/avatar-1.jpg" alt="Header Avatar">
-                                <span class="d-none d-xl-inline-block ms-1" key="t-henry"><?php echo $_SESSION['email'] ?></span>
-                                <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <!-- item-->
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item text-danger" href="../../../login.php"><i
-                                        class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span
-                                        key="t-logout">Logout</span></a>
+                            <div class="p-2 border-top d-grid">
+                                <a href='adminnotification.php' class="btn btn-sm btn-link font-size-14 text-center"
+                                    href="javascript:void(0)">
+                                    <i class="mdi mdi-arrow-right-circle me-1"></i> <span key="t-view-more">View
+                                        More..</span>
+                                </a>
                             </div>
                         </div>
                     </div>
+
+
+                    <div class="dropdown d-inline-block">
+                        <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img class="rounded-circle header-profile-user"
+                                src="../../../assets/images/users/avatar-1.jpg" alt="Header Avatar">
+                            <span class="d-none d-xl-inline-block ms-1" key="t-henry"><?php echo $_SESSION['email'] ?></span>
+                            <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <!-- item-->
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="../../../login.php"><i
+                                    class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span
+                                    key="t-logout">Logout</span></a>
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </header>
@@ -131,7 +131,7 @@ require_once "auth.php";
 
                         // Play the notification sound when a new notification arrives
                         if (data.newNotification) {
-                            playNotificationSound();
+                            //  playNotificationSound();
 
                         }
                     },

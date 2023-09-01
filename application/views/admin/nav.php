@@ -50,7 +50,7 @@
 
                         </div>
                     </li>
-                    <li class="nav-item dropdown">
+                    <!-- <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-components" role="button">
                             <i class="bx bx-collection me-2"></i><span key="t-components">Settings</span>
                             <div class="arrow-down"></div>
@@ -79,7 +79,7 @@
                                 </div>
                             </div>
                         </div>
-                    </li>
+                    </li> -->
 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-more" role="button">
