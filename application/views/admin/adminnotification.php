@@ -21,7 +21,7 @@
     $sql = "SELECT * FROM bookings b
     LEFT JOIN customers c ON b.customer_id = c.custid
     LEFT JOIN halls h ON h.hall_id = b.hall_id
-    LEFT JOIN transactions tr ON tr.refID = c.custid
+    LEFT JOIN transactions tr ON tr.refID = b.booking_id
 
     WHERE b.booking_status = 0 
     ORDER BY b.booking_id DESC";
@@ -134,7 +134,7 @@
 <!-- JavaScript/jQuery code -->
 <script>
     // Function to handle the "Approve" button click
-    $('.approve-btn').on('click', function (event) {
+    $('.approve-btn').on('click', func tion(event) {
         event.preventDefault();
         var aproveid = $(this).data('id');
 
@@ -147,11 +147,11 @@
                 booking_status: 'approve', // Change to 'rejected' for the Reject button
 
             },
-            success: function (response) {
+            success: func tion(response) {
                 // Handle the response if needed
                 window.location.href = "adminnotification.php";
             },
-            error: function (xhr, status, error) {
+            error: func tion(xhr, status, error) {
                 // Handle errors if any
                 console.error(error);
             }
@@ -159,7 +159,7 @@
     });
 
     // Function to handle the "Reject" button click
-    $('.reject-btn').on('click', function (event) {
+    $('.reject-btn').on('click', func tion(event) {
         event.preventDefault();
         var rid = $(this).data('id');
 
@@ -171,11 +171,11 @@
                 rid: rid,
                 booking_status: 'reject', // Change to 'approved' for the Approve button
             },
-            success: function (response) {
+            success: func tion(response) {
                 // Handle the response if needed
                 window.location.href = "adminnotification.php";
             },
-            error: function (xhr, status, error) {
+            error: func tion(xhr, status, error) {
                 // Handle errors if any
                 console.error(error);
             }
