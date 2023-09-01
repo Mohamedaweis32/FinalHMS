@@ -17,7 +17,10 @@ if ($query && mysqli_num_rows($query) > 0) {
     $count = $row['notification_count'];
 }
 
+
+
 // Return the notification count as JSON
 echo json_encode(
-    ['count' => $count]);
+    ['count' => $count]
+);
 ?>

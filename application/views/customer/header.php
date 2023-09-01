@@ -124,14 +124,15 @@
             // Function to update the notification count using AJAX
             function updateNotificationCount() {
                 $.ajax({
-                    url: 'notification_count_endpoint.php', // Replace with the actual URL of your PHP script
+                    url: 'notification_count_endpoint.php',
                     type: 'POST',
                     dataType: 'json',
                     success: function (data) {
-
-                        $('#notificat ionCount').text(data.count);
+                        // Update the notification count element
+                        $('#notificationCount').text(data.count);
                     },
                     error: function () {
+                        // Handle AJAX error here
                         $('#notificationCount').text('Error loading notification count.');
                     }
                 });
@@ -141,24 +142,18 @@
             updateNotificationCount();
 
             // Set an interval to update the notification count every few seconds (e.g., 10 seconds)
-            setInterval(updateNotificationCount, 10000); // 10000 milliseconds = 10 seconds
-
-
-
-
-
+            setInterval(updateNotificationCount, 10000);
 
             $(document).ready(function () {
                 // Add a click event listener to the "View All" link
-                $('#viewAllNotificatio nsLink').on('click', function (event) {
+                $('#viewAllNotificationsLink').on('click', function (event) {
                     event.preventDefault(); // Prevent the default link behavior
-                    var url = $(this).attr('href'); // Get the URL  from the link's 'href' attribute
+                    var url = $(this).attr('href'); // Get the URL from the link's 'href' attribute
 
                     // Redirect to the "notification.php" page
                     window.location.href = url;
                 });
             });
-
 
             function updateViewStatus() {
                 // Get the notificationCount element
@@ -172,26 +167,24 @@
                     // Prepare the data to send in the request
                     var data = {
                         view_status: 1
-                    }; // You can include additional data if needed
-
+                    };
 
                     // Send the AJAX request with jQuery
                     $.ajax({
                         type: "POST",
-                        url: "../admin/update_view_status.php", // Replace "update_view_status.php" with your server-side script URL
+                        url: "../admin/update_view_status.php",
                         data: data,
                         success: function (response) {
-                            // Request was successful, handle any response if necessary
-                            // For exampl e, you could update the UI to show that the view_status was updated.
-                            // The response variable contains the response from the server, if any.
+                            // Handle successful response here
+                            // You can update the UI or perform other actions
                         },
-                        erro r: function (xhr, status, error) {
-                            // Request failed, handle the error if necessary
-                            console.err or(error);
+                        error: function (xhr, status, error) {
+                            // Handle AJAX error here
+                            console.error(error);
                         }
                     });
 
-                    // Update the notificationCount display (optional, you can remove this if you don't want to change the display immediately)
+                    // Update the notificationCount display (optional)
                     notificationCountElement.text("0");
                 }
             }
@@ -203,42 +196,39 @@
                     dataType: 'json',
                     success: function (data) {
                         var notificationsContainer = $('#notificationsContainer');
-                    notifications Container.empty();
+                        notificationsContainer.empty();
 
                         $.each(data, function (index, notification) {
                             var notificationHtml = `
-                            <a href="javascri pt:void(0);" class="text-reset notification-item">
-                                <div class="d-flex">
-                                <div class="avatar-xs me-3">
-                                    <span class="avatar-title bg-primary rounded-circle font-size-16">
-                                        <i class="bx bx-cart"></i>
-                                    </span>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1">`;
+                                <a href="javascript:void(0);" class="text-reset notification-item">
+                                    <div class="d-flex">
+                                        <div class="avatar-xs me-3">
+                                            <span class="avatar-title bg-primary rounded-circle font-size-16">
+                                                <i class="bx bx-cart"></i>
+                                            </span>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">`;
 
                             if (notification.status == 1) {
-                                notificationHtml +=
-                                    `Thank you for booking with us ${notification.firstname}`;
-                            }
-                        el se
-                            if (notification.status == 2) {
-                            noti ficationHtml +=
-                                    `your booking is cancelled ${notification.firstname}`;
+                                notificationHtml += `Thank you for booking with us ${notification.firstname}`;
+                            } else if (notification.status == 2) {
+                                notificationHtml += `Your booking is cancelled ${notification.firstname}`;
                             }
 
                             notificationHtml += `</h6>
-                                    <div class="font-size-12 text-muted">
-                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span>${notification.time}</span></p>
-                                    </div>
+                                <div class="font-size-12 text-muted">
+                                    <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span>${notification.time}</span></p>
                                 </div>
                             </div>
-                        </a>
-                    `;
+                        </div>
+                    </a>
+                `;
                             notificationsContainer.append(notificationHtml);
                         });
                     },
-                    erro r: function (xhr, status, error) {
+                    error: function (xhr, status, error) {
+                        // Handle AJAX error here
                         console.error(error);
                     }
                 });
@@ -248,3 +238,6 @@
             fetchNotifications();
             setInterval(fetchNotifications, 30000);
         </script>
+</body>
+
+</html>
