@@ -9,7 +9,7 @@
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
     <!-- App favicon -->
-    <link rel="shortcut icon" href="../../../assets/images/favicon.ico">
+    <link rel="shortcut icon" href="../../../assets/images/ArmaanHall.ico">
     <!-- Bootstrap Css -->
     <link href="../../../assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
     <!-- Icons Css -->
@@ -93,8 +93,8 @@
 
                             ?>
                             <span class="d-none d-xl-inline-block ms-1" key="t-henry">
-<?php echo $name; ?>
-</span>
+                                <?php echo $name; ?>
+                            </span>
                             <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">
@@ -121,92 +121,92 @@
 
 
         <script>
-        // Function to update the notification count using AJAX
-        function updateNotificationCount() {
+            // Function to update the notification count using AJAX
+            function updateNotificationCount() {
                 $.ajax({
                     url: 'notification_count_endpoint.php', // Replace with the actual URL of your PHP script
                     type: 'POST',
                     dataType: 'json',
-                    success: function(data) {
-    
+                    success: function (data) {
+
                         $('#notificat ionCount').text(data.count);
-                },
-                    error: function() {
+                    },
+                    error: function () {
                         $('#notificationCount').text('Error loading notification count.');
                     }
-                 });
+                });
             }
-    
+
             // Call the function to update the notification count initially
-        updateNotificationCount();
-    
+            updateNotificationCount();
+
             // Set an interval to update the notification count every few seconds (e.g., 10 seconds)
-        setInterval(updateNotificationCount, 10000); // 10000 milliseconds = 10 seconds
-    
-    
+            setInterval(updateNotificationCount, 10000); // 10000 milliseconds = 10 seconds
 
 
 
 
-        $(document).ready(function() {
-            // Add a click event listener to the "View All" link
-                $('#viewAllNotificatio nsLink').on('click', function(event) {
+
+
+            $(document).ready(function () {
+                // Add a click event listener to the "View All" link
+                $('#viewAllNotificatio nsLink').on('click', function (event) {
                     event.preventDefault(); // Prevent the default link behavior
                     var url = $(this).attr('href'); // Get the URL  from the link's 'href' attribute
-    
+
                     // Redirect to the "notification.php" page
-                window.location.href = url;
+                    window.location.href = url;
                 });
-         });
-    
-    
-           function updateViewStatus() {
-            // Get the notificationCount element
+            });
+
+
+            function updateViewStatus() {
+                // Get the notificationCount element
                 var notificationCountElement = $("#notificationCount");
 
-                    // Get the current value of notificationCount (number of notifications)
-            var notificationCount = parseInt(notificationCountElement.text());
+                // Get the current value of notificationCount (number of notifications)
+                var notificationCount = parseInt(notificationCountElement.text());
 
-                    // If there are notifications (count > 0), update the view_status via AJAX
-            if (notificationCount > 0) {
+                // If there are notifications (count > 0), update the view_status via AJAX
+                if (notificationCount > 0) {
                     // Prepare the data to send in the request
                     var data = {
                         view_status: 1
                     }; // You can include additional data if needed
-  
-    
-                  // Send the AJAX request with jQuery
-                $.ajax({
+
+
+                    // Send the AJAX request with jQuery
+                    $.ajax({
                         type: "POST",
                         url: "../admin/update_view_status.php", // Replace "update_view_status.php" with your server-side script URL
                         data: data,
-                        success: function(response) {
+                        success: function (response) {
                             // Request was successful, handle any response if necessary
                             // For exampl e, you could update the UI to show that the view_status was updated.
                             // The response variable contains the response from the server, if any.
-                       },
-                       erro  r: function(xhr, status, error) {
+                        },
+                        erro r: function (xhr, status, error) {
                             // Request failed, handle the error if necessary
                             console.err or(error);
                         }
-                });
-        
+                    });
+
                     // Update the notificationCount display (optional, you can remove this if you don't want to change the display immediately)
-                notificationCountElement.text("0");
-               }
+                    notificationCountElement.text("0");
+                }
             }
-    
-             function fetchNotifications() {
-            $.ajax({
+
+            function fetchNotifications() {
+                $.ajax({
                     url: 'fetch_notifications.php',
                     method: 'GET',
                     dataType: 'json',
-                    success: function(data) {
+                    success: function (data) {
                         var notificationsContainer = $('#notificationsContainer');
-                        notifications Container.empty();
-    
-                        $.each(data, function(index, notification) {
-                        var notificationHtml = `
+                    notifications Container.empty();
+
+                        $.each(data, function (index, notification) {
+                            var notificationHtml = `
                             <a href="javascri pt:void(0);" class="text-reset notification-item">
                                 <div class="d-flex">
                                 <div class="avatar-xs me-3">
@@ -217,15 +217,17 @@
                                 <div class="flex-grow-1">
                                     <h6 class="mb-1">`;
 
-                        if (notification.status == 1) {
-                            notificationHtml +=
+                            if (notification.status == 1) {
+                                notificationHtml +=
                                     `Thank you for booking with us ${notification.firstname}`;
-                         } el   se if (notification.status == 2) {
-                             noti   ficationHtml +=
+                            }
+                        el se
+                            if (notification.status == 2) {
+                            noti ficationHtml +=
                                     `your booking is cancelled ${notification.firstname}`;
                             }
 
-                                notificationHtml += `</h6>
+                            notificationHtml += `</h6>
                                     <div class="font-size-12 text-muted">
                                             <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span>${notification.time}</span></p>
                                     </div>
@@ -233,16 +235,16 @@
                             </div>
                         </a>
                     `;
-                        notificationsContainer.append(notificationHtml);
-                    });
-                   },
-                    erro r: function(xhr, status, error) {
+                            notificationsContainer.append(notificationHtml);
+                        });
+                    },
+                    erro r: function (xhr, status, error) {
                         console.error(error);
                     }
-              });
+                });
             }
-    
-               // Fetch notifications initially and then fetch every 30 seconds
-        fetchNotifications();
-        setInterval(fetchNotifications, 30000);
+
+            // Fetch notifications initially and then fetch every 30 seconds
+            fetchNotifications();
+            setInterval(fetchNotifications, 30000);
         </script>

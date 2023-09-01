@@ -1,8 +1,5 @@
 <?php
 session_start();
-?>
-
-<?php
 require_once "auth.php";
 
 ?>
@@ -18,14 +15,14 @@ require_once "auth.php";
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
     <!-- App favicon -->
-    <link rel="shortcut icon" href="../../../assets/images/favicon.ico">
+    <link rel="shortcut icon" href="../../../assets/images/ArmaanHall.ico">
     <!-- Bootstrap Css -->
     <link href="../../../assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
     <!-- Icons Css -->
     <link href="../../../assets/css/icons.min.css" rel="stylesheet" type="text/css" />
     <!-- App Css-->
     <link href="../../../assets/css/app.min.css" rel="stylesheet" type="text/css" />
-    <link rel="shortcut icon" href="../../../assets/images/favicon.ico">
+    <link rel="shortcut icon" href="../../../assets/images/ArmaanHall.ico">
 
     <!-- DataTables -->
     <link href="assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
@@ -93,7 +90,9 @@ require_once "auth.php";
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img class="rounded-circle header-profile-user"
                                 src="../../../assets/images/users/avatar-1.jpg" alt="Header Avatar">
-                            <span class="d-none d-xl-inline-block ms-1" key="t-henry"><?php echo $_SESSION['email'] ?></span>
+                            <span class="d-none d-xl-inline-block ms-1" key="t-henry">
+                                <?php echo $_SESSION['email'] ?>
+                            </span>
                             <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">

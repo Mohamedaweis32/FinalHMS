@@ -1,87 +1,106 @@
 <?php
-require '../conn.php';
+require_once '../conn.php';
 
-// Validate input data
-if (empty($_POST['htype']) || empty($_POST['hprice']) || empty($_POST['hlocation']) || empty($_POST['hcapacity'])) {
-    $result = [
-        'message' => 'Required fields are missing.',
-        'status' => 400
-    ];
-    echo json_encode($result);
-    exit;
+function validateInput($data)
+{
+    return !empty($data);
 }
 
-// Get POST data
-$hall_id = @$_POST['hall_id'];
-$desc = @$_POST['hdesc'];
-$type = @$_POST['htype'];
-$hprice = @$_POST['hprice'];
-$capacity = @$_POST['hcapacity'];
-$location = @$_POST["hlocation"];
-$photo = isset($_FILES['hphoto']['name']) ? $_FILES['hphoto']['name'] : '';
-$path = isset($_FILES['hphoto']['tmp_name']) ? $_FILES['hphoto']['tmp_name'] : '';
-
-
-$mdate = date('Y-m-d');
-$folder = "../images/" . $photo;
-
-// Check if hall_id is empty for insertion or update
-if (empty($hall_id)) {
-    // Insert new hall
-    $sql = "INSERT INTO halls (hall_type, hallPrice, location, capacity, hall_photo, hall_desc, date)
-            VALUES (?, ?, ?, ?, ?, ?, ?)";
+function isHallTypeUnique($conn, $type)
+{
+    $sql = "SELECT COUNT(*) FROM halls WHERE hall_type = ?";
     $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "sssssss", $type, $hprice, $location, $capacity, $folder, $desc, $mdate);
-    $query = mysqli_stmt_execute($stmt);
-
-    if ($query) {
-        if (!empty($photo)) {
-            move_uploaded_file($path, $folder);
-        }
-
-        $result = [
-            'message' => 'Successfully inserted a new hall.',
-            'status' => 200
-        ];
-    } else {
-        $result = [
-            'message' => 'Could not create a new hall.',
-            'status' => 500
-        ];
-    }
-
+    mysqli_stmt_bind_param($stmt, "s", $type);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_bind_result($stmt, $count);
+    mysqli_stmt_fetch($stmt);
     mysqli_stmt_close($stmt);
-} else {
+    return $count === 0;
+}
 
-    $photo = isset($_FILES['hphoto']['name']) ? $_FILES['hphoto']['name'] : '';
-    $path = isset($_FILES['hphoto']['tmp_name']) ? $_FILES['hphoto']['tmp_name'] : '';
-    $folder = "../images/" . $photo;
+function uploadFile($file)
+{
+    if ($file['error'] === UPLOAD_ERR_OK) {
+        $tempPath = $file['tmp_name'];
+        $fileName = basename($file['name']);
+        $uploadPath = "../images/$fileName";
+        if (move_uploaded_file($tempPath, $uploadPath)) {
+            return $uploadPath;
+        }
+    }
+    return null;
+}
 
-    $sql = "UPDATE halls SET hall_type = ?, location = ?, hallPrice = ?, capacity = ?, hall_desc = ?, date = ?, hall_photo = ?
-            WHERE hall_id = ?";
-    $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "ssssssss", $type, $location, $hprice, $capacity, $desc, $mdate, $photo, $hall_id);
-    $query = mysqli_stmt_execute($stmt);
+$result = [
+    'message' => '',
+    'status' => 200
+];
 
-    if ($query) {
-        if (!empty($photo)) {
-            // Only move the file if a new photo has been provided
-            move_uploaded_file($path, $folder);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $hall_id = isset($_POST['hall_id']) ? $_POST['hall_id'] : null;
+    $desc = $_POST['hdesc'];
+    $type = $_POST['htype'];
+    $hprice = $_POST['hprice'];
+    $capacity = $_POST['hcapacity'];
+    $location = $_POST['hlocation'];
+    $photo = isset($_FILES['hphoto']) ? $_FILES['hphoto'] : null;
+    $mdate = date('Y-m-d');
+
+    // Validate required fields
+    if (!validateInput($type) || !validateInput($hprice) || !validateInput($capacity) || !validateInput($location)) {
+        $result['message'] = 'Required fields are missing.';
+        $result['status'] = 404;
+    } else {
+        $uploadPath = null; // Initialize to null
+
+        if ($photo) {
+            $uploadPath = uploadFile($photo);
+            if (!$uploadPath) {
+                $result['message'] = 'Failed to upload the photo.';
+                $result['status'] = 404;
+            }
         }
 
-        $result = [
-            'message' => 'Successfully updated the hall.',
-            'status' => 200
-        ];
-    } else {
-        $result = [
-            'message' => 'Could not update the hall.',
-            'status' => 500
-        ];
+        // Check if hall type is unique
+        if (isHallTypeUnique($conn, $type) || $hall_id) {
+            if (!$hall_id) {
+                // Insert new hall
+                $sql = "INSERT INTO halls (hall_type, hallPrice, location, capacity, hall_photo, hall_desc, date)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+                $stmt = mysqli_prepare($conn, $sql);
+                mysqli_stmt_bind_param($stmt, "sssssss", $type, $hprice, $location, $capacity, $uploadPath, $desc, $mdate);
+            } else {
+                // Update existing hall
+                $sql = "UPDATE halls SET hall_type = ?, location = ?, hallPrice = ?, capacity = ?, hall_desc = ?, date = ?, hall_photo = ?
+                        WHERE hall_id = ?";
+
+                $stmt = mysqli_prepare($conn, $sql);
+                mysqli_stmt_bind_param($stmt, "sssssssi", $type, $location, $hprice, $capacity, $desc, $mdate, $uploadPath, $hall_id);
+            }
+
+            $query = mysqli_stmt_execute($stmt);
+
+            if ($query) {
+                $result['message'] = 'Successfully ' . ($hall_id ? 'updated' : 'inserted') . ' the hall.';
+                if (!$hall_id) {
+                    $result['hall_id'] = mysqli_insert_id($conn);
+                }
+            } else {
+                $result['message'] = 'Could not ' . ($hall_id ? 'update' : 'insert') . ' the hall.';
+                $result['status'] = 404;
+            }
+
+            mysqli_stmt_close($stmt);
+        } else {
+            $result['message'] = 'A hall with the same type already exists.';
+            $result['status'] = 404;
+        }
     }
+} else {
+    $result['message'] = 'Invalid request method.';
+    $result['status'] = 404;
 }
-mysqli_stmt_close($stmt);
 
 echo json_encode($result);
-
 ?>

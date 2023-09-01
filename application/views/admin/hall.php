@@ -3,27 +3,27 @@ include 'nav.php';
 include '../../../conn.php';
 ?>
 <style>
-    .btn-primary {
-        color: #fff;
-        background-color: #00487a !important;
-        border-color: #00487a !important;
-    }
+.btn-primary {
+    color: #fff;
+    background-color: #00487a !important;
+    border-color: #00487a !important;
+}
 
-    .selected-image-container {
-        text-align: center;
-    }
+.selected-image-container {
+    text-align: center;
+}
 
-    #selected-image {
-        max-width: 100%;
-        max-height: 200px;
-        border-radius: 50px;
-    }
+#selected-image {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 50px;
+}
 
-    .logo-thumbnail {
-        max-width: 100px;
-        max-height: 100px;
-        border-radius: 50px;
-    }
+.logo-thumbnail {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 50px;
+}
 </style>
 
 
@@ -169,8 +169,7 @@ include '../../../conn.php';
                         <div class="modal-body">
 
                             <form method="Post" id="hall_form" action="../../../apis/halls.php">
-                                <div class="alert alert-danger" id="error"> </div>
-                                <div class="alert alert-success" id="success"></div>
+
                                 <input type="hidden" name="hall_id" id="hall_id">
 
                                 <input type="hidden" id='hiddenPhoto' name='hiddenPhoto'>
@@ -251,18 +250,18 @@ include '../../../conn.php';
     <!-- <script src="../../../js/halls.js"></script> -->
 
     <style>
-        /* Custom styles for the table */
-        .dataTables_wrapper {
-            padding: 20px;
-        }
+    /* Custom styles for the table */
+    .dataTables_wrapper {
+        padding: 20px;
+    }
 
-        .dataTables_filter {
-            float: right;
-        }
+    .dataTables_filter {
+        float: right;
+    }
 
-        .dataTables_paginate {
-            float: right;
-        }
+    .dataTables_paginate {
+        float: right;
+    }
     </style>
     <!-- Include jQuery, Bootstrap, and DataTables -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -273,115 +272,80 @@ include '../../../conn.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
-
     <script>
-        $(document).ready(function () {
+    $(document).ready(function() {
+        // Initialize DataTable
+        $('#tblHall').DataTable();
+        $('.dataTables_length').addClass('bs-select');
 
-            $('#tblHall ').DataTable();
-            $('.dataTables_length').addClass('bs-select');
+        // Set initial visibility for error and success messages
+        $("#error, #success").css("display", "none");
 
-            $('.delete-btn').click(function (e) {
-                e.preventDefault();
-                var itemId = $(this).data('item-id');
-                deleteItem(itemId);
-            });
-
-            $("#error").css("display", "none");
-            $("#success").css("display", "none");
-
-        })
-
-        $(document).ready(function () {
-            $('.delete-btn').click(function (e) {
-                e.preventDefault();
-                var itemId = $(this).data('item-id');
-                deleteItem(itemId);
-            });
-
-
-
-        })
-        // $("#hall_form").submit(function(e) {
-        //     e.preventDefault();
-        //     $.ajax({
-        //         url: "../../../apis/halls.php",
-        //         data: new FormData($(this)[0]),
-        //         cache: false,
-        //         contentType: false,
-        //         processData: false,
-        //         method: 'POST',
-        //         type: 'POST',
-        //         success: function(resp) {
-        //             alert(resp)
-        //             var res = jQuery.parseJSON(resp);
-        //             if (res.status == 200) {
-        //                 window.location.href = 'hall.php';
-        //                 //    $("#success").css("display", "block");
-        //                 //     $("#success").text(res.message);
-        //             } else if (res.status == 404) {
-        //                 //   $("#success").css("display", "none");
-        //                 //    $("#error").css("display", "block");
-        //                 //    $("#error").text(res.message);
-        //             }
-
-        //         }
-        //     });
-
-
-        // });
-
-        $("#hall_form").submit(function (e) {
+        // Attach click event handlers for delete buttons
+        $('.delete-btn').click(function(e) {
             e.preventDefault();
-            if (!validateForm()) {
-                showValidationErrorAlert();
+            var itemId = $(this).data('item-id');
+            deleteItem(itemId);
+        });
 
+        $('.edit-btn').click(function() {
+            var hallid = parseInt($(this).data('id'), 10);
+
+            $.ajax({
+                url: '../../../apis/halls/gethalls.php',
+                type: 'POST',
+                data: {
+                    hallid: hallid
+                },
+                success: function(response) {
+                    var hallData = JSON.parse(response);
+
+                    // Set the values in the form
+                    $('#htype').val(hallData.htype);
+                    $('#hall_id').val(hallData.hid);
+                    $('#hprice').val(hallData.hprice);
+                    $('#hlocation').val(hallData.hlocation);
+                    $('#hdesc').val(hallData.hdesc);
+                    $('#hcapacity').val(hallData.hcapacity);
+
+                    // Display the selected image filename
+                    var filename = "../../" + hallData.hphoto.split('/').pop();
+                    $('#hphoto').siblings('.file-label').text(filename);
+
+                    // Set the image source
+                    $("#img-selected").html(`
+                    <img id="selected-image" class="rounded-lg" src="../../${hallData.hphoto}" alt="Preview Hall Photo" width="400" height="200">
+                `);
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors
+                    console.error(error);
+                    showErrorAlert("An error occurred while fetching data.");
+                }
+            });
+        });
+
+        // Attach change event for file input to display selected image
+        $('#hphoto').change(function(e) {
+            var file = e.target.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                $('#selected-image').attr('src', e.target.result);
+                $("#img-selected").html(`
+                <img id="selected-image" class="rounded-lg" src="${e.target.result}" alt="Preview Hall Photo" width="400" height="200">
+            `);
+            }
+
+            reader.readAsDataURL(file);
+        });
+
+        $("#hall_form").submit(function(e) {
+            e.preventDefault();
+            if (validateForm()) {
+                submitForm();
             } else {
-                $.ajax({
-                    url: "../../../apis/halls.php",
-                    data: new FormData($(this)[0]),
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    method: 'POST',
-                    type: 'POST',
-                    success: function (resp) {
-                        var res = jQuery.parseJSON(resp);
-                        if (res.status == 200) {
-                            // Show success alert
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: res.message,
-                                timer: 2000, // Show success message for 2 seconds
-                                timerProgressBar: true,
-                                showConfirmButton: false
-                            });
-                            // Redirect after success
-                            setTimeout(function () {
-                                window.location.href = 'hall.php';
-                            }, 2000);
-                        } else if (res.status == 404) {
-                            // Show error alert
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: res.message,
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        // Handle errors
-                        console.error(error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: 'An error occurred during submission.',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                });
+                showValidationErrorAlert();
             }
         });
 
@@ -391,8 +355,8 @@ include '../../../conn.php';
             const hcapacity = $("#hcapacity").val();
             const hprice = $("#hprice").val();
             const hdesc = $("#hdesc").val();
-            const imageSrc = $(".selected-image-container img").attr("src");
-            const imageUrl = imageSrc != '' ? imageSrc : '';
+            const imageSrc = $("#selected-image").attr("src");
+            const imageUrl = imageSrc !== '' ? imageSrc : '';
 
             return htype && hlocation && hcapacity && hprice && hdesc && imageUrl;
         }
@@ -407,125 +371,61 @@ include '../../../conn.php';
             });
         }
 
-        $(document).ready(function () {
-            // When a file is selected, display the image
-            $('#hphoto').change(function (e) {
-                var file = e.target.files[0];
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    $('#selected-image').attr('src', e.target.result);
-                    $("#img-selected").html(`
-                        <img id=" selected-image" class="rounded-lg" src="${e.target.result}" alt="Perview Hall Photo" width="400" height="200">
-                    `)
-                }
-
-                reader.readAsDataURL(file);
+        function showErrorAlert(message) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: message,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
             });
-        });
-
-        function closeModal() {
-            $("#img-selected").html(`
-            <img id=" selected-image" class="rounded-lg" src="" alt="Perview Hall Photo" width="400" height="200">
-        `)
-            $("#hallModal").modal("show")
-
-            $("#htype").val('')
-            $("#hlocation").val('')
-            $("#hcapacity").val('')
-            $("#hprice").val('')
-            $("#hdesc").val('')
-
         }
 
-        $(document).ready(function () {
-            $('.edit-btn').click(function () {
-                var hallid = parseInt($(this).data('id'), 10);
-                $.ajax({
-                    url: '../../../apis/halls/gethalls.php',
-                    type: 'POST',
-                    data: {
-                        hallid: hallid
-                    },
-                    success: function (response) {
-                        var hallData = JSON.parse(response);
+        function showSuccessAlert(message) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: message,
+                timer: 2000, // Show success message for 2 seconds
+                timerProgressBar: true,
+                showConfirmButton: false
+            });
+        }
 
-                        // Set the values in the form
-                        $('#htype').val(hallData.htype);
-                        $('#hall_id').val(hallData.hid);
-                        $('#hprice').val(hallData.hprice);
-                        $('#hlocation').val(hallData.hlocation);
-                        $('#hdesc').val(hallData.hdesc);
-                        $('#hcapacity').val(hallData.hcapacity);
-                        $('#hiddenPhoto').val(hallData.hphoto);
+        function submitForm() {
+            var formData = new FormData($("#hall_form")[0]);
 
-                        // Display the selected image filename
-                        var filename = hallData.hphoto.split('/').pop();
-                        $('#hphoto').siblings('.file-label').text(filename);
+            $.ajax({
+                url: "../../../apis/halls.php",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                success: function(resp) {
+                    var res = jQuery.parseJSON(resp);
+                    if (res.status == 200) {
+                        // Show success alert
+                        showSuccessAlert(res.message);
 
-                        // Set the image source
-
-
-                        // Set the image source
-                        console.log(hallData)
-                        $("#img-selected").html(`
-                        <img id=" selected-image" class="rounded-lg" src="../../${hallData.hphoto}" alt="Perview Hall Photo" width="400" height="200">
-                    `)
-                        // $('#selected-image').attr('src', `../../${hallData.hphoto}`);
-                    },
-                    error: function (xhr, status, error) {
-                        // Handle errors
-                        console.error(error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: 'An error occurred while fetching data.',
-                            confirmButtonText: 'OK'
-                        });
+                        // Redirect after success
+                        setTimeout(function() {
+                            window.location.href = 'hall.php';
+                        }, 2000);
+                    } else if (res.status == 404) {
+                        // Show error alert
+                        showErrorAlert(res.message);
                     }
-                });
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors
+                    console.error(error);
+                    showErrorAlert("An error occurred during submission.");
+                }
             });
-        });
-
-
-
-        function convertRelativePathToAbsolute(relativePath) {
-            // Get the current URL
-            var currentURL = window.location.href;
-
-            // Extract the base URL from the current URL
-            var baseURL = currentURL.substr(0, currentURL.lastIndexOf('/') + 1);
-
-            // Combine the base URL and the relative path
-            var absolutePath = baseURL + relativePath;
-
-            return absolutePath;
         }
 
-        // Usage example
-
-
-
-
-
-
-
-        // function deleteItem(itemId) {
-        //     $.ajax({
-        //         url: '../../../apis/halls/delete.php',
-        //         method: 'POST',
-        //         data: { itemId: itemId },
-        //         success: function(response) {
-        //             window.location.href = 'hall.php';
-        //             console.log(response);
-        //             // Reload the page or update the UI as needed
-        //         },
-        //         error: function(xhr, status, error) {
-        //             // Handle errors
-        //             console.error(error);
-        //         }
-        //     });
-        // }function deleteItem(itemId) {
         function deleteItem(itemId) {
             Swal.fire({
                 title: 'Are you sure?',
@@ -544,36 +444,21 @@ include '../../../conn.php';
                         data: {
                             itemId: itemId
                         },
-                        success: function (resp) {
+                        success: function(resp) {
                             var res = jQuery.parseJSON(resp);
 
                             if (res.status == 200) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Success',
-                                    text: res.message,
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        setTimeout(function () {
-                                            window.location.href = 'hall.php';
-                                        }, 2000);
-                                    }
-                                });
+                                showSuccessAlert(res.message);
+
+                                // Redirect after success
+                                setTimeout(function() {
+                                    window.location.href = 'hall.php';
+                                }, 2000);
                             } else if (res.status == 404) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: res.message,
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        setTimeout(function () {
-                                            window.location.href = 'hall.php';
-                                        }, 2000);
-                                    }
-                                });
+                                showErrorAlert(res.message);
                             }
                         },
-                        error: function (xhr, status, error) {
+                        error: function(xhr, status, error) {
                             // Handle errors
                             console.error(error);
                         }
@@ -581,4 +466,5 @@ include '../../../conn.php';
                 }
             });
         }
+    });
     </script>

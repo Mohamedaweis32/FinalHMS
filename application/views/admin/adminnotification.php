@@ -21,9 +21,9 @@
     $sql = "SELECT * FROM bookings b
     LEFT JOIN customers c ON b.customer_id = c.custid
     LEFT JOIN halls h ON h.hall_id = b.hall_id
-    LEFT JOIN transactions tr ON tr.refID = b.hall_id
+    LEFT JOIN transactions tr ON tr.refID = c.custid
 
-    WHERE booking_status = 0  
+    WHERE b.booking_status = 0 
     ORDER BY b.booking_id DESC";
     $query = mysqli_query($conn, $sql);
     ?>
@@ -62,37 +62,37 @@
                                                     $customer = $row['firstname'];
                                                     $bid = $row['booking_id'];
                                                     $hall = $row['hall_type'];
-                                                   
+
                                                     $credit = $row['credit'];
 
                                                     $debit = $row['debit'];
                                                     $date = date('Y-m-d', strtotime($row['created_at']));
                                                     $startTime = $row['starttime'];
                                                     $endTime = $row['endtime'];
-                                                    $balance = $row['debit']-$row['credit'];
+                                                    $balance = $row['debit'] - $row['credit'];
                                                     $bookingStatus = $row['booking_status'];
-                                              
-                            
+
+
                                                     echo "<tr>";
                                                     echo "<td>" . $customer . "</td>";
                                                     echo "<td>" . $hall . "</td>";
                                                     if ($credit == 0) {
                                                         echo "<td>0$</td>";
-                                                      } else {
+                                                    } else {
                                                         echo "<td>{$credit}$</td>";
-                                                      }
-                                                      if ($debit == 0) {
+                                                    }
+                                                    if ($debit == 0) {
                                                         echo "<td>0$</td>";
-                                                      } else {
+                                                    } else {
                                                         echo "<td>{$debit}$</td>";
-                                                      }
-                                            
+                                                    }
+
                                                     echo "<td>" . $date . "</td>";
-                                           
+
                                                     echo "<td>" . $startTime . "</td>";
                                                     echo "<td>" . $endTime . "</td>";
                                                     echo "<td>" . $balance . "</td>";
-                                                  
+
                                                     echo "<td>";
                                                     if ($bookingStatus == 0) {
                                                         echo "Pending";
@@ -121,10 +121,11 @@
             </div>
         </div>
     </center>
-<!-- Add Bootstrap JS (Optional) -->
+    <!-- Add Bootstrap JS (Optional) -->
     <!-- You can include it at the end of the body tag if needed -->
     <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>  -->
-    </body>
+</body>
+
 </html>
 <!-- Include jQuery library -->
 <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
@@ -136,7 +137,7 @@
     $('.approve-btn').on('click', function (event) {
         event.preventDefault();
         var aproveid = $(this).data('id');
-       
+
         // Send AJAX request to update the booking_status
         $.ajax({
             url: 'update_booking_status.php', // Replace with your PHP script URL
@@ -144,7 +145,7 @@
             data: {
                 aproveid: aproveid,
                 booking_status: 'approve', // Change to 'rejected' for the Reject button
-              
+
             },
             success: function (response) {
                 // Handle the response if needed
@@ -168,7 +169,7 @@
             method: 'POST',
             data: {
                 rid: rid,
-                booking_status: 'reject',// Change to 'approved' for the Approve button
+                booking_status: 'reject', // Change to 'approved' for the Approve button
             },
             success: function (response) {
                 // Handle the response if needed

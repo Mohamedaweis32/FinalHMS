@@ -3,18 +3,18 @@
 <?php include '../../../conn.php'; ?>
 
 <style>
-/* Custom styles for the table */
-.dataTables_wrapper {
-    padding: 20px;
-}
+    /* Custom styles for the table */
+    .dataTables_wrapper {
+        padding: 20px;
+    }
 
-.dataTables_filter {
-    float: right;
-}
+    .dataTables_filter {
+        float: right;
+    }
 
-.dataTables_paginate {
-    float: right;
-}
+    .dataTables_paginate {
+        float: right;
+    }
 </style>
 
 
@@ -81,65 +81,65 @@
                                                     <th scope="col">User Name</th>
                                                     <th scope="col">Email</th>
                                                     <th scope="col">Passowrd</th>
-                                                    <th scope="col">Status</th>
+                                                    <!-- <th scope="col">Status</th> -->
                                                     <th scope="col">Type</th>
                                                     <th scope="col">Action</th>
                                                 </tr>
 
                                             </thead>
                                             <?php
-                // Select query
-                $sql = "SELECT * FROM users WHERE 1";
-                $result = mysqli_query($conn, $sql);
-                $n=1;
+                                            // Select query
+                                            $sql = "SELECT * FROM users WHERE 1";
+                                            $result = mysqli_query($conn, $sql);
+                                            $n = 1;
 
-                // Check if the query was successful
-                if ($result) {
-                    // Check if there are any rows returned
-                    if (mysqli_num_rows($result) > 0) {
-                        while ($row = mysqli_fetch_assoc($result)) {
-                            $userid = $row['user_id'];
-                            $username = $row['username'];
-                            $pass = $row['password'];
-                            $email = $row['email'];
-                            $type = $row['type'];
-                            $status = $row['status'];
-                      
-                            // Display the data
-                            echo "<tr>";
-                            echo "<td>$n</td>";                         
-                            echo "<td>$username</td>";                         
-                            echo "<td>$email</td>";
-                            echo "<td>$pass</td>";
-                          if($status==1){
-                            echo "<td>Active</td>";
-                          }
-                          else{
-                            echo "<td>InACtive</td>"; 
-                          }
-                         
-                            
-                            echo "<td>$type</td>";
-                            echo "<td>
+                                            // Check if the query was successful
+                                            if ($result) {
+                                                // Check if there are any rows returned
+                                                if (mysqli_num_rows($result) > 0) {
+                                                    while ($row = mysqli_fetch_assoc($result)) {
+                                                        $userid = $row['user_id'];
+                                                        $username = $row['username'];
+                                                        $pass = $row['password'];
+                                                        $email = $row['email'];
+                                                        $type = $row['type'];
+                                                        $status = $row['status'];
+                                                        $maskedPassword = str_repeat('*', strlen($pass));
+
+                                                        // Display the data
+                                                        echo "<tr>";
+                                                        echo "<td>$n</td>";
+                                                        echo "<td>$username</td>";
+                                                        echo "<td>$email</td>";
+                                                        echo "<td>$maskedPassword</td>";
+                                                        // if ($status == 1) {
+                                                        //     echo "<td>Active</td>";
+                                                        // } else {
+                                                        //     echo "<td>InACtive</td>";
+                                                        // }
+                                            
+
+                                                        echo "<td>$type</td>";
+                                                        echo "<td>
                             <li class='list-inline-item'>
                             <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-item-id='$userid'><i class='bx bxs-edit-alt'></i></a>
                             </li>
                             <li class='list-inline-item'>
                             <a href='#' class='text-danger p-2 delete-btn' data-item-id='$userid'><i class='bx bxs-trash'></i></a>
                         </li></td>";
-                            echo "</tr>";
-                            $n++;
-                 
-                        }
-                    } else {
-                        echo "<tr><td colspan='6'>No users found</td></tr>";
-                    }
-                } else {
-                    echo "Error: " . mysqli_error($conn);
-                }
+                                                        echo "</tr>";
+                                                        $n++;
 
-                mysqli_close($conn);
-            ?>
+                                                    }
+                                                } else {
+                                                    echo "<tr><td colspan='6'>No users found</td></tr>";
+                                                }
+                                            } else {
+                                                echo "Error: " . mysqli_error($conn);
+                                            }
+
+                                            mysqli_close($conn);
+                                            ?>
 
 
                                             </tbody>
@@ -181,7 +181,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="formrow-address-input" class="form-label">User Password</label>
-                                    <input type="password" class="form-control form-control-sm" id="upass" name="upass"
+                                    <input type="text" class="form-control form-control-sm" id="upass" name="upass"
                                         placeholder="Enter User Password">
                                 </div>
                             </div>
@@ -243,143 +243,143 @@
 <div id="loader" class="loader"></div> <!-- Add this loader element to your HTML -->
 
 <script>
-$(document).ready(function() {
-    $('#tblCustomer').DataTable();
-    $('.dataTables_length').addClass('bs-select');
+    $(document).ready(function () {
+        $('#tblCustomer').DataTable();
+        $('.dataTables_length').addClass('bs-select');
 
-    $('.delete-btn').click(function(e) {
-        e.preventDefault();
-        var itemId = $(this).data('item-id');
-        deleteItem(itemId);
-    });
-
-    $(document).ready(function() {
-        $('.delete-btn').click(function(e) {
+        $('.delete-btn').click(function (e) {
             e.preventDefault();
             var itemId = $(this).data('item-id');
             deleteItem(itemId);
         });
 
-        $("#error").css("display", "none");
-        $("#success").css("display", "none");
+        $(document).ready(function () {
+            $('.delete-btn').click(function (e) {
+                e.preventDefault();
+                var itemId = $(this).data('item-id');
+                deleteItem(itemId);
+            });
 
-    })
-    $('.edit-btn').click(function() {
-        var user_id = $(this).data('item-id');
-        console.log(user_id)
-        $.ajax({
-            url: "../../../apis/users/getusers.php",
-            type: 'POST',
-            data: {
-                user_id: user_id
-            },
-            success: function(response) {
-                console.log(response)
-                var userData = JSON.parse(response);
+            $("#error").css("display", "none");
+            $("#success").css("display", "none");
 
-                $('#uname').val(userData.name);
-                $('#userid').val(userData.id);
-                $('#upass').val(userData.pass);
-                $('#email').val(userData.email);
-                $('#type').val(userData.type);
-                $('#status').val(userData.status);
-            }
-        });
-    });
-
-    $("#users").submit(function(e) {
-        e.preventDefault(); // Prevent the form from submitting
-        var formData = new FormData($(this)[0]);
-        console.log(formData)
-        // Show the loader
-        $("#loader").show();
-
-        $.ajax({
-            url: '../../../apis/users/users.php',
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            method: 'POST',
-            type: 'POST',
-            dataType: 'json', // Specify that the response is JSON
-            success: function(resp) {
-                console.log(resp); // Print the response to the console
-                if (resp.status == 200) {
-                    // Show success alert
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: resp.message,
-                        timer: 2000, // Show success message for 2 seconds
-                        timerProgressBar: true,
-                        showConfirmButton: false
-                    }).then(() => {
-                        // Reload the page after the timer expires
-                        window.location.reload();
-                    });
-                } else if (resp.status == 404) {
-                    // Show error alert
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: resp.message,
-                        confirmButtonText: 'OK'
-                    });
-                }
-            },
-
-            error: function(xhr, textStatus, errorThrown) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'An error occurred while processing the request.'
-                });
-            },
-            complete: function() {
-                // Always hide the loader when the AJAX request is complete
-                $("#loader").hide();
-            }
-        });
-    });
-
-});
-
-function deleteItem(itemId) {
-    // Use SweetAlert for delete confirmation
-    Swal.fire({
-        title: 'Are you sure?',
-        text: 'You are about to delete this item. This action cannot be undone.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Delete',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // If the user clicks 'Delete', proceed with the delete operation
+        })
+        $('.edit-btn').click(function () {
+            var user_id = $(this).data('item-id');
+            console.log(user_id)
             $.ajax({
-                url: '../../../apis/users/delete.php',
-                method: 'POST',
+                url: "../../../apis/users/getusers.php",
+                type: 'POST',
                 data: {
-                    itemId: itemId
+                    user_id: user_id
                 },
-                success: function(resp) {
-                    window.location.reload();
+                success: function (response) {
+                    console.log(response)
+                    var userData = JSON.parse(response);
 
+                    $('#uname').val(userData.name);
+                    $('#userid').val(userData.id);
+                    $('#upass').val(userData.pass);
+                    $('#email').val(userData.email);
+                    $('#type').val(userData.type);
+                    $('#status').val(userData.status);
+                }
+            });
+        });
+
+        $("#users").submit(function (e) {
+            e.preventDefault(); // Prevent the form from submitting
+            var formData = new FormData($(this)[0]);
+            console.log(formData)
+            // Show the loader
+            $("#loader").show();
+
+            $.ajax({
+                url: '../../../apis/users/users.php',
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                dataType: 'json', // Specify that the response is JSON
+                success: function (resp) {
+                    console.log(resp); // Print the response to the console
+                    if (resp.status == 200) {
+                        // Show success alert
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: resp.message,
+                            timer: 2000, // Show success message for 2 seconds
+                            timerProgressBar: true,
+                            showConfirmButton: false
+                        }).then(() => {
+                            // Reload the page after the timer expires
+                            window.location.reload();
+                        });
+                    } else if (resp.status == 404) {
+                        // Show error alert
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: resp.message,
+                            confirmButtonText: 'OK'
+                        });
+                    }
                 },
-                error: function(xhr, status, error) {
-                    // Use SweetAlert error alert
+
+                error: function (xhr, textStatus, errorThrown) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'An error occurred while deleting the item.',
+                        text: 'An error occurred while processing the request.'
                     });
-                    console.error(error);
+                },
+                complete: function () {
+                    // Always hide the loader when the AJAX request is complete
+                    $("#loader").hide();
                 }
             });
+        });
 
-        }
     });
-}
+
+    function deleteItem(itemId) {
+        // Use SweetAlert for delete confirmation
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You are about to delete this item. This action cannot be undone.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Delete',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If the user clicks 'Delete', proceed with the delete operation
+                $.ajax({
+                    url: '../../../apis/users/delete.php',
+                    method: 'POST',
+                    data: {
+                        itemId: itemId
+                    },
+                    success: function (resp) {
+                        window.location.reload();
+
+                    },
+                    error: function (xhr, status, error) {
+                        // Use SweetAlert error alert
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while deleting the item.',
+                        });
+                        console.error(error);
+                    }
+                });
+
+            }
+        });
+    }
 </script>

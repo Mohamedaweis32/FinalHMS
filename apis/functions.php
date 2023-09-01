@@ -1,10 +1,9 @@
+<?php
 
-
-<?php  
-
- //require '../conn.php';
+//require '../conn.php';
 // Function to delete the item from the database
-function allqueryHandler($conn, $sql) {
+function allqueryHandler($conn, $sql)
+{
     $query = mysqli_query($conn, $sql);
     if ($query) {
         return true;
@@ -14,37 +13,40 @@ function allqueryHandler($conn, $sql) {
 }
 
 //check hall capacity
-function getHallCapacity($conn,$hall_id){
-    $sql="select * from halls where hall_id='$hall_id'";
-    $query=mysqli_query($conn,$sql);
-    if($result=mysqli_fetch_array($query)){
-        $capacity=$result['capacity'];
+function getHallCapacity($conn, $hall_id)
+{
+    $sql = "select * from halls where hall_id='$hall_id'";
+    $query = mysqli_query($conn, $sql);
+    if ($result = mysqli_fetch_array($query)) {
+        $capacity = $result['capacity'];
         return $capacity;
     }
     return 0;
-    
+
 }
-function if_record_exists($conn,$sql){
-    $query=mysqli_query($conn,$sql);
-    if ($query && mysqli_num_rows($query)){
+function if_record_exists($conn, $sql)
+{
+    $query = mysqli_query($conn, $sql);
+    if ($query && mysqli_num_rows($query)) {
         return true;
     }
     return false;
 
-    }
+}
 
- //calculate the debit 
-function calculateDebit($rate,$attendee){
-    if(empty($rate)){
+//calculate the debit 
+function calculateDebit($rate, $attendee)
+{
+    if (empty($rate)) {
         return 0;
-    }
-    else if (empty($attendee)){
+    } else if (empty($attendee)) {
         return 0;
     }
     $result = $rate * $attendee;
     return $result;
 }
-function calculateFacilityPrice($facilityIds, $conn) {
+function calculateFacilityPrice($facilityIds, $conn)
+{
     // Convert the array of facility IDs to a comma-separated string
     $facilityIdsString = implode(',', $facilityIds);
 
@@ -61,49 +63,49 @@ function calculateFacilityPrice($facilityIds, $conn) {
     return 0; // Return 0 if no facilities or prices found
 }
 
-function getHallPrice($conn, $hallId) {
+function getHallPrice($conn, $hallId)
+{
     $sql = "SELECT * FROM halls WHERE hall_id = '$hallId'";
     $query = mysqli_query($conn, $sql);
     if ($query) {
         $result = mysqli_fetch_array($query);
         $hallPrice = $result['hallPrice'];
-        if ($hallId <= 0){
+        if ($hallId <= 0) {
             return 0;
 
-        }
-        else{
+        } else {
             return $hallPrice;
         }
-    }
-    else{
+    } else {
         return 0;
     }
-      
+
 }
 
-function getFoodprice($conn, $foodid) {
+function getFoodprice($conn, $foodid)
+{
     $sql = " SELECT * from food WHERE foodId = '$foodid'";
     $query = mysqli_query($conn, $sql);
     if ($query) {
         $result = mysqli_fetch_array($query);
         $foodPrice = $result['foodPrice'];
-        if ($foodPrice <=! 0){
+        if ($foodPrice <= !0) {
             return $foodPrice;
 
-        
-      
-    }
-}
-    else{
+
+
+        }
+    } else {
         return 0;
     }
-      
+
 }
 
 
 
 
-function calculateTimeDuration($startTime, $endTime) {
+function calculateTimeDuration($startTime, $endTime)
+{
     $start = strtotime($startTime);
     $end = strtotime($endTime);
 
@@ -140,6 +142,37 @@ function getCustomerIdbasedonEmail($conn, $email)
         return 0;
     }
 }
+function isEmailValid($email)
+{
+    // Use PHP's filter_var function to check email validity
+    return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+}
+
+function isPasswordValid($password)
+{
+    // Define password criteria (e.g., at least 8 characters and at least one uppercase letter)
+    $passwordCriteria = '/^(?=.*[A-Z]).{8,}$/';
+    return preg_match($passwordCriteria, $password);
+}
+
+function isUserExists($username, $conn)
+{
+    // Assuming $conn is a MySQL database connection
+    $username = mysqli_real_escape_string($conn, $username);
+    $query = "SELECT * FROM users WHERE username = '$username'";
+    $result = mysqli_query($conn, $query);
+    return mysqli_num_rows($result) > 0;
+}
+
+function isEmailRegistered($email, $conn)
+{
+    // Assuming $conn is a MySQL database connection
+    $email = mysqli_real_escape_string($conn, $email);
+    $query = "SELECT * FROM users WHERE email = '$email'";
+    $result = mysqli_query($conn, $query);
+    return mysqli_num_rows($result) > 0;
+}
+
 
 // $starttime = "09:00";
 // $endtime = "11:30";
